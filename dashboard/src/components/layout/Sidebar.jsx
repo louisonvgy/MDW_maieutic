@@ -9,7 +9,7 @@ const NAV = [
   { id: 'search',        label: 'Recherche' },
   { id: 'temporel',      label: 'Temporel',      soon: true },
   { id: 'concentration', label: 'Concentration', soon: true },
-  { id: 'reseau',        label: 'Réseau',        soon: true },
+  { id: 'reseau',        label: 'Réseau' },
   { id: 'disciplines',   label: 'Disciplines',   soon: true },
 ]
 
@@ -17,7 +17,8 @@ export default function Sidebar({ filters, onChange, activePage, onNavigate }) {
   const set = (key) => (e) => onChange({ ...filters, [key]: e.target.value || null })
 
   return (
-    <aside className="w-64 shrink-0 bg-white border-r border-slate-200 h-screen sticky top-0 p-6 flex flex-col gap-6">
+    <aside className="w-64 shrink-0 bg-white border-r border-slate-200 h-screen sticky top-0 flex flex-col">
+      <div className="p-6 overflow-y-auto custom-scrollbar flex flex-col gap-6 flex-1">
       <div>
         <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">M@ieutic</span>
         <h1 className="text-xl font-bold text-slate-800 mt-1">Cartographie des thèses</h1>
@@ -79,6 +80,7 @@ export default function Sidebar({ filters, onChange, activePage, onNavigate }) {
             Réinitialiser les filtres
           </button>
         )}
+      </div>
       </div>
     </aside>
   )
