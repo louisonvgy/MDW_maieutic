@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Sidebar from './components/layout/Sidebar'
 import Overview from './pages/Overview'
 import Concentration from './pages/Concentration'
+import Reseau from './pages/Reseau'
 import { useFilteredData } from './hooks/useFilteredData'
 
 export default function App() {
@@ -15,6 +16,7 @@ export default function App() {
       <main className="flex-1 overflow-y-auto">
         {page === 'overview'      && <Overview data={data} query={filters.query} onQueryChange={q => setFilters(f => ({ ...f, query: q }))} />}
         {page === 'concentration' && <Concentration data={data} />}
+        {page === 'reseau'        && <Reseau data={data} filters={filters} />}
       </main>
     </div>
   )
