@@ -142,3 +142,123 @@ Après enrichissement, `data.json` contient **9 246 entrées** et **11 champs** 
 | `lon` | **100 %** *(était 76,1 %)* |
 | `cnu_norm` | 100 % |
 | `etablissement_norm` | 100 % |
+
+---
+
+## II. Analyses exploratoires (notebooks Python)
+
+### 2.1 Analyse temporelle
+
+Une première analyse temporelle a été conduite en Python (notebook `01_exploration.ipynb`) sur la distribution annuelle des thèses entre 2021 et 2026.
+
+**Résultats observés :**
+
+- Évolution globalement croissante du volume de thèses sur la période, avec une légère inflexion selon les disciplines
+- Disparités disciplinaires notables : certaines sections CNU (19 – Sociologie, 71 – Info-com) présentent une croissance plus marquée que d'autres (17 – Philosophie, 20 – Ethnologie) sur la même période
+- Le pic de soutenances se concentre sur les mois de novembre–décembre dans toutes les disciplines, cohérent avec le calendrier académique français
+
+**Pistes d'approfondissement identifiées :**
+- Calcul de taux de croissance annuels par section CNU
+- Détection de tendances (régression linéaire ou lissage) pour projeter les volumes
+- Comparaison avec des données antérieures à 2021 si disponibles
+
+---
+
+### 2.2 Analyse de concentration
+
+L'analyse de concentration a été conduite sur deux dimensions : les établissements de soutenance et les directeurs de thèse.
+
+**Méthode :**
+- Comptage des thèses par établissement (`etablissement_norm`) et par directeur
+- Calcul de l'indice de Gini via somme cumulative pondérée
+- Calcul du seuil dynamique N : nombre minimal d'acteurs couvrant 80 % du corpus
+- Tracé des courbes de concentration cumulée (analogues aux courbes de Lorenz)
+
+**Résultats préliminaires :**
+
+| Dimension | Gini | N (seuil 80 %) |
+|---|---|---|
+| Établissements | ~0.55–0.65 | à préciser |
+| Directeurs | ~0.70–0.80 | à préciser |
+
+- Les 10 premiers établissements concentrent environ 40–50 % des thèses du corpus
+- La concentration est nettement plus forte côté directeurs : une minorité de chercheurs encadre une part disproportionnée des thèses
+- La courbe de concentration des directeurs est très convexe, signe d'une forte inégalité d'encadrement
+
+Ces analyses ont été intégrées dans le dashboard React sous forme d'un onglet dédié (cf. section III).
+
+---
+
+## III. Dashboard React — premiers développements
+
+### 3.1 Architecture et stack
+
+Un dashboard interactif a été initié en React 19 + Vite avec Tailwind CSS v4. L'ensemble des données est embarqué dans un fichier `data.json` statique ; tous les calculs (filtres, agrégations, Gini) sont réalisés côté client via `useMemo`.
+
+**Bibliothèques retenues :**
+- **Recharts** — graphiques (barres, courbes de concentration)
+- **React-Leaflet** — cartographie interactive
+- **Tailwind CSS v4** — styles utilitaires
+
+### 3.2 Première cartographie
+
+La première visualisation opérationnelle est une carte choroplèthe par établissement (onglet *Vue d'ensemble*) :
+
+- Fond de carte CARTO (neutre, lisible)
+- Un `CircleMarker` par établissement, de rayon proportionnel à la racine carrée du nombre de thèses (`√(nb/max) × 28`)
+- Tooltip au survol affichant le nom et l'effectif
+- Couverture géographique : 100 % des thèses géolocalisées
+
+La carte confirme visuellement la concentration parisienne et de quelques grandes métropoles régionales (Lyon, Bordeaux, Strasbourg, Lille).
+
+### 3.3 Vue d'ensemble — fonctionnalités actuelles
+
+L'onglet *Vue d'ensemble* expose :
+
+- **4 KPIs** : nombre total de thèses, établissements distincts, directeurs distincts, taux de co-encadrement
+- **BarChart annuel** : évolution du volume de thèses par année
+- **Carte** : répartition géographique par établissement
+- **Distribution CNU** : barres proportionnelles par section
+- **Recherche plein-texte** sur les titres : bandeau cliquable affichant les résultats, visuels mis à jour en temps réel
+
+### 3.4 Onglet Concentration
+
+L'onglet *Concentration* traduit les analyses Python en visualisations interactives :
+
+- Top N établissements et directeurs (N dynamique, seuil 80 %)
+- Courbes de concentration cumulée avec ligne de référence à 80 %
+- Indice de Gini affiché avec code couleur (vert / orange / rouge)
+- Distribution par section CNU
+
+---
+
+## IV. Réflexions préliminaires — Analyse réseau
+
+### 4.1 Objet de l'analyse
+
+L'analyse réseau vise à modéliser les **relations de co-direction** : deux directeurs sont liés s'ils ont encadré ensemble au moins une thèse. Le graphe résultant est un **graphe non orienté de co-encadrement**, où :
+
+- Les **nœuds** sont les directeurs de thèse
+- Les **arêtes** relient deux directeurs ayant co-encadré une même thèse
+- Le **poids** des arêtes peut refléter le nombre de co-encadrements partagés
+
+Un second graphe possible est **établissement–directeur** (biparti) : un directeur est relié à tous les établissements dans lesquels il a encadré des thèses, ce qui permettrait de visualiser les mobilités ou les double-affiliations.
+
+### 4.2 Questions de recherche associées
+
+- Existe-t-il des **communautés disciplinaires** distinctes, ou les directeurs co-encadrent-ils à travers les sections CNU ?
+- Qui sont les **nœuds centraux** (hubs) du réseau ? Correspondent-ils aux directeurs les plus prolifiques ou à des figures de passeurs inter-disciplinaires ?
+- Le réseau est-il **fragmenté** (nombreuses composantes isolées) ou présente-t-il un grand composant connexe ?
+
+### 4.3 Outils envisagés
+
+| Outil | Usage |
+|---|---|
+| `networkx` (Python) | Construction du graphe, calcul de centralité (degré, betweenness, PageRank), détection de communautés (Louvain) |
+| `d3-force` ou `react-force-graph` | Rendu interactif dans le dashboard (force-directed layout) |
+| `gephi` | Exploration visuelle exploratoire hors dashboard |
+
+### 4.4 Contraintes anticipées
+
+- Le corpus contient **~3 000 directeurs distincts** avec co-direction → le graphe peut être dense ; un filtrage (seuil de co-encadrements ≥ 2, ou restriction à une section CNU) sera probablement nécessaire pour la lisibilité
+- Les noms de directeurs n'étant pas normalisés (homonymes, variantes orthographiques), une étape de dédoublonnage sera nécessaire avant la construction du graphe
