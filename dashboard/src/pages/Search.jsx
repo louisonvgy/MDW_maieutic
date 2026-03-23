@@ -35,9 +35,8 @@ function ThesisCard({ thesis, query }) {
         <span className="bg-amber-50 text-amber-700 border border-amber-100 rounded-full px-2.5 py-0.5">
           {thesis.cnu} – {CNU_LABELS[thesis.cnu] || thesis.cnu}
         </span>
-        {thesis.accessible
-          ? <span className="bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-full px-2.5 py-0.5">Open Access</span>
-          : <span className="bg-red-50 text-red-600 border border-red-100 rounded-full px-2.5 py-0.5">Non accessible</span>
+        {thesis.accessible &&
+          <span className="bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-full px-2.5 py-0.5">Open Access</span>
         }
       </div>
 
@@ -57,11 +56,11 @@ export default function Search() {
   const results = useMemo(() => {
     const q = query.trim().toLowerCase()
     if (q.length < 2) return []
-    return allData.filter(d =>
-      d.titre?.toLowerCase().includes(q) ||
-      d.directeurs?.some(dir => dir.toLowerCase().includes(q)) ||
-      d.etablissement_norm?.toLowerCase().includes(q)
-    )
+    return allData
+      .filter(d =>
+        d.titre?.toLowerCase().includes(q)
+      )
+      .sort((a, b) => b.annee - a.annee)
   }, [query])
 
   const hasQuery = query.trim().length >= 2
@@ -70,7 +69,7 @@ export default function Search() {
     <div className="p-8 flex flex-col gap-6">
       <div>
         <h2 className="text-2xl font-bold text-slate-800">Recherche</h2>
-        <p className="text-slate-500 text-sm mt-1">Recherchez par mot-clé dans les titres, directeurs ou établissements</p>
+        <p className="text-slate-500 text-sm mt-1">Recherchez par mot-clé dans les titres</p>
       </div>
 
       {/* Barre de recherche */}
@@ -82,7 +81,7 @@ export default function Search() {
           type="text"
           value={query}
           onChange={e => setQuery(e.target.value)}
-          placeholder="Ex : philosophie, intelligence artificielle, féminisme…"
+          placeholder="Ex : philosophie, intelligence artificielle, sport…"
           className="w-full pl-12 pr-4 py-4 text-base border border-slate-300 rounded-2xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent placeholder-slate-400"
           autoFocus
         />
