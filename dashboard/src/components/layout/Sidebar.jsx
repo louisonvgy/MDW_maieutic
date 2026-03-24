@@ -6,7 +6,7 @@ const etabs = [...new Set(allData.map(d => d.etablissement_norm))].sort()
 
 const NAV = [
   { id: 'overview',      label: 'Vue d\'ensemble' },
-  { id: 'temporel',      label: 'Temporel',      soon: true },
+  { id: 'temporel',      label: 'Évolution temporelle' },
   { id: 'concentration', label: 'Concentration' },
   { id: 'reseau',        label: 'Réseau' },
   { id: 'disciplines',   label: 'Disciplines',   soon: true },
