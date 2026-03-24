@@ -1,6 +1,7 @@
 import { useMemo, useState, useRef, useEffect } from 'react'
 import ForceGraph from '../components/charts/ForceGraph'
-import ChordDiagram from '../components/charts/ChordDiagram'
+import KeywordTrends from '../components/charts/KeywordTrends'
+import KeywordDrillDown from '../components/charts/KeywordDrillDown'
 import MapNetwork from '../components/charts/MapNetwork'
 
 export default function Reseau({ data, filters }) {
@@ -97,22 +98,34 @@ export default function Reseau({ data, filters }) {
         </div>
       </div>
 
-      {/* Chart 2: Chord diagram – Interdisciplinarity */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-5">
-        <p className="text-sm font-semibold text-slate-700 mb-1">🎓 Réseau d'interdisciplinarité</p>
-        <p className="text-xs text-slate-400 mb-4">
-          Les connexions entre sections CNU sont créées lorsqu'un directeur encadre des thèses dans plusieurs disciplines.
-          L'épaisseur du ruban reflète l'intensité de cette relation interdisciplinaire.
-        </p>
-        {filters?.cnu ? (
-          <div className="flex items-center justify-center bg-slate-50 border border-dashed border-slate-200 rounded-xl" style={{ height: 500 }}>
-            <p className="text-slate-500 font-medium text-sm">Réinitialisez le filtre section cnu pour voir ce graphique</p>
+      {/* Chart 2 & 3: Keyword Trends and Drill-Down */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 min-h-[500px]">
+        {/* Trend Chart */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-5 flex flex-col">
+          <p className="text-sm font-semibold text-slate-700 mb-1">📈 Tendances des mots-clés</p>
+          <p className="text-xs text-slate-400 mb-4 flex-none">
+            {filters?.annee 
+              ? `Top mot-clé par domaine (CNU) pour l'année ${filters.annee}.`
+              : "Chaque courbe représente une discipline (CNU). Survolez les points pour découvrir quel était le mot le plus utilisé cette année-là !"}
+          </p>
+          <div className="flex-1 w-full relative">
+            <KeywordTrends data={data} selectedYear={filters?.annee} />
           </div>
-        ) : (
-          <ChordDiagram data={data} />
-        )}
+        </div>
+
+        {/* Drill-down Chart */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-5 flex flex-col">
+          <p className="text-sm font-semibold text-slate-700 mb-1">🔍 Exploration Profonde (Drill-Down)</p>
+          <p className="text-xs text-slate-400 mb-4 flex-none">
+            Cliquez sur un arc pour plonger dans la donnée : Disciplines (CNU) → Années → Mots-clés.
+          </p>
+          <div className="flex-1 w-full relative">
+            <KeywordDrillDown filters={filters} />
+          </div>
+        </div>
       </div>
 
+      {/* Chart 3: Map with inter-establishment links */}
       <div className="bg-white rounded-2xl border border-slate-200 p-5">
         <p className="text-sm font-semibold text-slate-700 mb-1">🏛️ Réseau inter-établissements</p>
         <p className="text-xs text-slate-400 mb-4">
