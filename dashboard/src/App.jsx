@@ -4,6 +4,7 @@ import Overview from './pages/Overview'
 import Concentration from './pages/Concentration'
 import Temporel from './pages/Temporel'
 import Reseau from './pages/Reseau'
+import Disciplines from './pages/Disciplines'
 import { useFilteredData } from './hooks/useFilteredData'
 
 export default function App() {
@@ -19,6 +20,7 @@ export default function App() {
         {page === 'temporel'      && <Temporel data={data} />}
         {page === 'concentration' && <Concentration data={data} />}
         {page === 'reseau'        && <Reseau data={data} filters={filters} />}
+        {page === 'disciplines'   && <Disciplines />}
       </main>
     </div>
   )

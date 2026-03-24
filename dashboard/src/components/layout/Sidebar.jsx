@@ -9,7 +9,7 @@ const NAV = [
   { id: 'temporel',      label: 'Évolution temporelle' },
   { id: 'concentration', label: 'Concentration' },
   { id: 'reseau',        label: 'Réseau' },
-  { id: 'disciplines',   label: 'Disciplines',   soon: true },
+  { id: 'disciplines',   label: 'Regroupement par mot clé' },
 ]
 
 export default function Sidebar({ filters, onChange, activePage, onNavigate }) {

@@ -10,7 +10,6 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  Cell,
 } from 'recharts'
 
 const PALETTE = [
@@ -55,28 +54,6 @@ function SimpleTooltip({ active, payload, label }) {
   )
 }
 
-function DirectorTooltip({ active, payload, label }) {
-  if (!active || !payload?.length) return null
-
-  const rows = payload
-    .filter(entry => entry.value > 0)
-    .sort((a, b) => b.value - a.value)
-
-  return (
-    <div className="rounded-2xl border bg-white p-3 shadow-xl text-sm">
-      <div className="mb-2 font-semibold">Année : {label}</div>
-      {rows.map(entry => (
-        <div key={entry.dataKey} className="mb-2">
-          <div className="font-medium" style={{ color: entry.color }}>
-            {entry.name}
-          </div>
-          <div>Thèses cette année : {entry.value}</div>
-          <div>Total : {entry.payload?.[`__total__${entry.dataKey}`] ?? 0}</div>
-        </div>
-      ))}
-    </div>
-  )
-}
 
 function Card({ title, description, children, height = 360 }) {
   return (
@@ -151,67 +128,26 @@ export default function Temporel({ data = [] }) {
       ).size,
     }))
 
-    // 4. Top 10 directeurs + autres
-    const totalByDirector = new Map()
-    for (const row of directorRows) {
-      totalByDirector.set(row.directeur, (totalByDirector.get(row.directeur) || 0) + 1)
-    }
-
-    const top10 = Array.from(totalByDirector.entries())
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 10)
-      .map(([name]) => name)
-
-    const groupedRows = directorRows.map(row => ({
-      ...row,
-      grp: top10.includes(row.directeur) ? row.directeur : 'Autres',
-    }))
-
-    const totalByGroup = new Map()
-    for (const row of groupedRows) {
-      totalByGroup.set(row.grp, (totalByGroup.get(row.grp) || 0) + 1)
-    }
-
-    const stackMap = new Map()
-    for (const row of groupedRows) {
-      if (!stackMap.has(row.annee)) {
-        stackMap.set(row.annee, { annee: row.annee })
-      }
-      const target = stackMap.get(row.annee)
-      target[row.grp] = (target[row.grp] || 0) + 1
-    }
-
-    const stackedDirectors = Array.from(stackMap.values())
-      .sort((a, b) => a.annee - b.annee)
-      .map(row => {
-        const enriched = { ...row }
-        for (const dir of [...top10, 'Autres']) {
-          if (!(dir in enriched)) enriched[dir] = 0
-          enriched[`__total__${dir}`] = totalByGroup.get(dir) || 0
-        }
-        return enriched
-      })
-
     return {
       total: cleaned.length,
       byYear,
       disciplines,
       disciplineLineData,
       directorsByYear,
-      top10,
-      stackedDirectors,
     }
   }, [data])
+
   if (processed.total === 0) {
     return <div className="p-8">Aucun résultat pour votre filtre</div>
   }
+
   return (
     <div className="flex flex-col gap-8 p-8">
       <div className="flex items-end justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800">Analyse temporelle</h2>
+          <h2 className="text-2xl font-bold text-slate-800">Évolution temporelle</h2>
           <p className="mt-1 text-sm text-slate-500">
-            Conversion du notebook Python en visualisations React.
+            Analyse des thèses dans le temps par année et discipline
           </p>
         </div>
         <span className="rounded-xl bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-500">
@@ -220,18 +156,14 @@ export default function Temporel({ data = [] }) {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card title="Nombre d'enregistrements par année">
+        <Card title="Nombre de thèses par année">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={processed.byYear}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="annee" tick={{ fontSize: 11 }} />
               <YAxis tick={{ fontSize: 11 }} />
               <Tooltip content={<SimpleTooltip />} />
-              <Bar dataKey="count" name="Enregistrements" radius={[6, 6, 0, 0]}>
-                {processed.byYear.map((_, i) => (
-                  <Cell key={i} fill={PALETTE[0]} />
-                ))}
-              </Bar>
+              <Bar dataKey="count" name="Thèses" radius={[6, 6, 0, 0]} fill={PALETTE[0]} />
             </BarChart>
           </ResponsiveContainer>
         </Card>
@@ -258,7 +190,7 @@ export default function Temporel({ data = [] }) {
       </div>
 
       <Card
-        title="Nombre d'enregistrements par année et par domaine de recherche"
+        title="Thèses par année et par domaine de recherche"
         description="Une courbe par discipline"
         height={440}
       >
@@ -282,31 +214,6 @@ export default function Temporel({ data = [] }) {
               />
             ))}
           </LineChart>
-        </ResponsiveContainer>
-      </Card>
-
-      <Card
-        title="Répartition annuelle des thèses par directeur"
-        description="Top 10 directeurs et regroupement des autres"
-        height={480}
-      >
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={processed.stackedDirectors}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="annee" tick={{ fontSize: 11 }} />
-            <YAxis tick={{ fontSize: 11 }} />
-            <Tooltip content={<DirectorTooltip />} />
-            <Legend wrapperStyle={{ fontSize: 11 }} />
-            {[...processed.top10, 'Autres'].map((dir, i) => (
-              <Bar
-                key={dir}
-                dataKey={dir}
-                name={dir}
-                stackId="directors"
-                fill={PALETTE[i % PALETTE.length]}
-              />
-            ))}
-          </BarChart>
         </ResponsiveContainer>
       </Card>
     </div>
