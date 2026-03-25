@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, useMemo } from 'react'
 import { forceSimulation, forceManyBody, forceCenter, forceCollide } from 'd3-force'
+import KeywordTrends from '../components/charts/KeywordTrends'
+import KeywordDrillDown from '../components/charts/KeywordDrillDown'
 
 // Couleurs par section CNU (cohérentes avec le reste du dashboard)
 const CNU_COLORS = {
@@ -24,7 +26,7 @@ function getColor(cnuLabel) {
 const MAX_R = 60
 const MIN_R = 14
 
-export default function Disciplines() {
+export default function Disciplines({ data, filters, isDarkMode }) {
   const [clusters, setClusters] = useState(null)
   const [error, setError] = useState(null)
   const [hovered, setHovered] = useState(null)
@@ -143,22 +145,22 @@ export default function Disciplines() {
   // --- États de chargement / erreur / vide ---
   if (error) return (
     <div className="p-8 flex items-center justify-center h-full">
-      <p className="text-slate-400">Impossible de charger clusters.json</p>
+      <p className="text-slate-400 dark:text-slate-500">Impossible de charger clusters.json</p>
     </div>
   )
 
   if (clusters === null) return (
     <div className="p-8 flex items-center justify-center h-full">
-      <p className="text-slate-400">Chargement…</p>
+      <p className="text-slate-400 dark:text-slate-500">Chargement…</p>
     </div>
   )
 
   if (clusters.length === 0) return (
     <div className="p-8 flex flex-col items-center justify-center gap-4 h-full">
       <div className="text-center max-w-md">
-        <p className="text-slate-700 font-semibold text-lg mb-2">Aucune donnée de clustering</p>
-        <p className="text-slate-400 text-sm">
-          Lance d'abord le notebook Python <code className="bg-slate-100 px-1.5 py-0.5 rounded text-xs">notebooks/02_clustering_titres.ipynb</code> pour générer <code className="bg-slate-100 px-1.5 py-0.5 rounded text-xs">clusters.json</code>, puis place le fichier dans <code className="bg-slate-100 px-1.5 py-0.5 rounded text-xs">dashboard/public/</code>.
+        <p className="text-slate-700 dark:text-slate-200 font-semibold text-lg mb-2">Aucune donnée de clustering</p>
+        <p className="text-slate-400 dark:text-slate-500 text-sm">
+          Lance d'abord le notebook Python <code className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-xs">notebooks/02_clustering_titres.ipynb</code> pour générer <code className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-xs">clusters.json</code>, puis place le fichier dans <code className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-xs">dashboard/public/</code>.
         </p>
       </div>
     </div>
@@ -171,8 +173,8 @@ export default function Disciplines() {
 
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-slate-800">Disciplines</h2>
-        <p className="text-slate-500 text-sm mt-1">
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Disciplines</h2>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
           Clustering sémantique des titres — {clusters.length} groupes · chaque bulle représente un cluster thématique
         </p>
       </div>
@@ -182,7 +184,7 @@ export default function Disciplines() {
         {/* Bubble chart */}
         <div
           ref={containerRef}
-          className="flex-1 bg-white rounded-2xl border border-slate-200 overflow-hidden"
+          className="flex-1 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm"
         >
           <svg
             ref={svgRef}
@@ -299,7 +301,7 @@ export default function Disciplines() {
         <div className="w-72 shrink-0 flex flex-col gap-4">
 
           {/* Légende CNU */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-3">
               Sections CNU
             </p>
@@ -310,7 +312,7 @@ export default function Disciplines() {
                     className="w-3 h-3 rounded-full shrink-0"
                     style={{ backgroundColor: color }}
                   />
-                  <span className="text-xs text-slate-600 leading-tight">{label}</span>
+                  <span className="text-xs text-slate-600 dark:text-slate-300 leading-tight">{label}</span>
                 </div>
               ))}
             </div>
@@ -318,14 +320,14 @@ export default function Disciplines() {
 
           {/* Détail cluster sélectionné */}
           {selectedCluster && (
-            <div className="bg-white rounded-2xl border border-slate-200 p-4 flex flex-col gap-3">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 flex flex-col gap-3 shadow-sm">
               <div className="flex items-start justify-between gap-2">
-                <p className="text-sm font-semibold text-slate-800 leading-snug">
+                <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 leading-snug">
                   {selectedCluster.label}
                 </p>
                 <button
                   onClick={() => setSelected(null)}
-                  className="text-slate-300 hover:text-slate-500 text-xs shrink-0"
+                  className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 text-xs shrink-0"
                 >
                   ✕
                 </button>
@@ -336,8 +338,8 @@ export default function Disciplines() {
                   className="w-2.5 h-2.5 rounded-full"
                   style={{ backgroundColor: getColor(selectedCluster.cnu_dominant) }}
                 />
-                <span className="text-xs text-slate-500">{selectedCluster.cnu_dominant ?? '—'}</span>
-                <span className="ml-auto text-xs font-semibold text-indigo-600">
+                <span className="text-xs text-slate-500 dark:text-slate-400">{selectedCluster.cnu_dominant ?? '—'}</span>
+                <span className="ml-auto text-xs font-semibold text-indigo-600 dark:text-indigo-400">
                   {selectedCluster.nb} thèses
                 </span>
               </div>
@@ -350,11 +352,10 @@ export default function Disciplines() {
                   {selectedCluster.keywords?.map((kw, i) => (
                     <span
                       key={kw}
-                      className="text-xs px-2 py-0.5 rounded-full border"
+                      className="text-xs px-2 py-0.5 rounded-full border dark:text-slate-200"
                       style={{
                         backgroundColor: getColor(selectedCluster.cnu_dominant) + '18',
                         borderColor: getColor(selectedCluster.cnu_dominant) + '40',
-                        color: '#334155',
                         opacity: 1 - i * 0.06,
                       }}
                     >
@@ -376,8 +377,8 @@ export default function Disciplines() {
                         const pct = Math.round(nb / selectedCluster.nb * 100)
                         return (
                           <div key={cnu} className="flex items-center gap-2 text-xs">
-                            <span className="text-slate-500 truncate flex-1">{cnu}</span>
-                            <div className="w-20 bg-slate-100 rounded-full h-1.5">
+                            <span className="text-slate-500 dark:text-slate-400 truncate flex-1">{cnu}</span>
+                            <div className="w-20 bg-slate-100 dark:bg-slate-800 rounded-full h-1.5">
                               <div
                                 className="h-1.5 rounded-full"
                                 style={{
@@ -397,13 +398,38 @@ export default function Disciplines() {
           )}
 
           {!selectedCluster && (
-            <div className="bg-slate-50 rounded-2xl border border-dashed border-slate-200 p-4 text-center">
-              <p className="text-xs text-slate-400">Clique sur une bulle pour voir le détail du cluster</p>
+            <div className="bg-slate-50 dark:bg-slate-950 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 p-4 text-center">
+              <p className="text-xs text-slate-400 dark:text-slate-500">Clique sur une bulle pour voir le détail du cluster</p>
             </div>
           )}
 
         </div>
       </div>
+
+      {/* Chart 2 & 3: Keyword Trends and Drill-Down */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 min-h-[500px] mt-4">
+        {/* Trend Chart */}
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 flex flex-col shadow-sm">
+          <p className="text-sm font-semibold text-slate-700 dark:text-slate-100 mb-1">Tendances des mots-clés</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 flex-none">
+            {filters?.annee 
+              ? `Top mot-clé par domaine (CNU) pour l'année ${filters.annee}.`
+              : "Chaque courbe représente une discipline (CNU). Survolez les points pour découvrir quel était le mot le plus utilisé cette année-là !"}
+          </p>
+          <div className="flex-1 w-full relative">
+            <KeywordTrends data={data || []} selectedYear={filters?.annee} />
+          </div>
+        </div>
+
+        {/* Drill-down Chart */}
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 flex flex-col shadow-sm">
+          <p className="text-sm font-semibold text-slate-700 dark:text-slate-100 mb-4">Top 10 des mots clés les plus utilisé par CNU</p>
+          <div className="flex-1 w-full relative">
+            <KeywordDrillDown filters={filters} isDarkMode={isDarkMode} />
+          </div>
+        </div>
+      </div>
+
     </div>
   )
 }

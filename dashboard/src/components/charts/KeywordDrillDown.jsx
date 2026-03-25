@@ -17,15 +17,18 @@ const getColorForCnu = (cnuStr) => {
   return CNU_PALETTE[Math.abs(hash) % CNU_PALETTE.length];
 }
 
-export default function KeywordDrillDown({ filters }) {
+export default function KeywordDrillDown({ filters, isDarkMode }) {
   const [drillCnu, setDrillCnu] = useState(null)
 
   // Pre-calculate the tree structures
   const { rootCnus, cnuWordsMap } = useMemo(() => {
     let baseData = allData
-    // We respect global establishment filter if any
+    // We respect global filters (etablissement and annee)
     if (filters?.etablissement) {
       baseData = baseData.filter(d => d.etablissement_norm === filters.etablissement)
+    }
+    if (filters?.annee) {
+      baseData = baseData.filter(d => d.annee === filters.annee)
     }
 
     const cnuCounts = {}
@@ -101,7 +104,7 @@ export default function KeywordDrillDown({ filters }) {
 
   if (!rootCnus.length) {
     return (
-      <div className="h-[400px] flex items-center justify-center bg-slate-50 border border-dashed rounded-xl mt-4">
+      <div className="h-[400px] flex items-center justify-center bg-slate-50 dark:bg-slate-900 border border-dashed border-slate-200 dark:border-slate-800 rounded-xl mt-4">
         <p className="text-slate-400">Aucune donnée disponible.</p>
       </div>
     )
@@ -109,24 +112,26 @@ export default function KeywordDrillDown({ filters }) {
 
   return (
     <div className="relative w-full h-[450px] flex flex-col mt-2">
-      <div className="flex items-center justify-between px-2 mb-2 z-10">
-        <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100 shadow-sm flex items-center gap-1.5 transition-all">
-          <span>📍</span> 
-          <span className="truncate max-w-[250px]">
-            {drillCnu ? drillCnu : 'Vue Globale (Toutes les disciplines)'}
+      <div className={`flex items-center px-2 z-10 ${drillCnu ? 'justify-between mb-2' : ''}`}>
+        {drillCnu && (
+          <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100 shadow-sm flex items-center gap-1.5 transition-all">
+            <span>📍</span> 
+            <span className="truncate max-w-[250px]">
+              {drillCnu}
+            </span>
           </span>
-        </span>
+        )}
         {drillCnu && (
           <button 
             onClick={() => setDrillCnu(null)}
-            className="text-xs px-3 py-1 bg-white hover:bg-slate-100 text-slate-700 rounded-md font-semibold shadow-sm border border-slate-200 transition-colors"
+            className="text-xs px-3 py-1 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-md font-semibold shadow-sm border border-slate-200 dark:border-slate-700 transition-colors"
           >
             &larr; Revenir aux disciplines
           </button>
         )}
       </div>
 
-      <div className="flex-1 bg-white border border-slate-100 rounded-xl overflow-hidden p-1 shadow-sm">
+      <div className="flex-1 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden p-1 shadow-sm">
         <ResponsiveTreeMap
           data={displayTree}
           identity="name"
@@ -137,17 +142,19 @@ export default function KeywordDrillDown({ filters }) {
           label={(e) => drillCnu ? `"${e.id}" (${e.value})` : e.id}
           labelTextColor="#ffffff"
           labelPosition="top-left"
+          orientLabels={false}
+          enableParentLabel={false}
           nodeOpacity={1}
           borderWidth={2}
           borderColor="#ffffff"
-          colors={drillCnu ? { scheme: 'pastel1' } : (node) => node.data.color || '#3b82f6'}
+          colors={drillCnu ? ['#fca5a5', '#fdba74', '#fcd34d', '#f87171', '#fb923c', '#fbbf24', '#f43f5e', '#f97316', '#eab308', '#ef4444'] : (node) => node.data.color || '#3b82f6'}
           // If viewing words (pastel colors), make text darker for readability
           theme={{
             labels: {
               text: {
                 fontSize: 13,
                 fontWeight: 600,
-                fill: drillCnu ? '#334155' : '#ffffff',
+                fill: drillCnu ? (isDarkMode ? '#000000' : '#334155') : '#ffffff',
                 textShadow: drillCnu ? 'none' : '0px 1px 2px rgba(0,0,0,0.3)'
               }
             }
@@ -156,8 +163,8 @@ export default function KeywordDrillDown({ filters }) {
           animate={true}
           motionConfig="stiff"
           tooltip={({ node }) => (
-            <div className="px-3 py-2 bg-white border border-slate-200 shadow-xl rounded-xl text-sm z-50">
-              <strong className="text-slate-800 block mb-1">
+            <div className="px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl rounded-xl text-sm z-50">
+              <strong className="text-slate-800 dark:text-slate-100 block mb-1">
                 {drillCnu ? `Mot: "${node.id}"` : `Discipline: ${node.id}`}
               </strong>
               <span className="text-slate-500 font-medium">
