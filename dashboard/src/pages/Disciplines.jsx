@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, useMemo } from 'react'
-import { forceSimulation, forceManyBody, forceCenter, forceCollide } from 'd3-force'
+import { forceSimulation, forceCollide, forceX, forceY } from 'd3-force'
 import KeywordTrends from '../components/charts/KeywordTrends'
 import KeywordDrillDown from '../components/charts/KeywordDrillDown'
+import { allData } from '../hooks/useFilteredData'
 
 // Couleurs par section CNU (cohérentes avec le reste du dashboard)
 const CNU_COLORS = {
@@ -31,12 +32,10 @@ export default function Disciplines({ data, filters, isDarkMode }) {
   const [error, setError] = useState(null)
   const [hovered, setHovered] = useState(null)
   const [selected, setSelected] = useState(null)
-  const [nodes, setNodes] = useState([])
+  const [showTheses, setShowTheses] = useState(false)
   const [dims, setDims] = useState({ w: 900, h: 680 })
   const svgRef = useRef()
   const containerRef = useRef()
-  const simRef = useRef()
-  const dragRef = useRef(null)
 
   // Charger clusters.json
   useEffect(() => {
@@ -56,54 +55,13 @@ export default function Disciplines({ data, filters, isDarkMode }) {
     return () => obs.disconnect()
   }, [])
 
-  // Drag handlers
-  const handleNodeMouseDown = (e, nodeId) => {
-    e.stopPropagation()
-    const node = simRef.current?.nodes().find(n => n.id === nodeId)
-    if (!node) return
-    node.fx = node.x
-    node.fy = node.y
-    simRef.current?.alphaTarget(0.3).restart()
-    dragRef.current = nodeId
-  }
-
-  const handleSvgMouseMove = (e) => {
-    if (dragRef.current === null) return
-    e.preventDefault()
-    const rect = svgRef.current.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    const node = simRef.current?.nodes().find(n => n.id === dragRef.current)
-    if (!node) return
-    node.fx = x
-    node.fy = y
-  }
-
-  const handleSvgMouseUp = () => {
-    if (dragRef.current === null) return
-    const node = simRef.current?.nodes().find(n => n.id === dragRef.current)
-    if (node) { node.fx = null; node.fy = null }
-    simRef.current?.alphaTarget(0)
-    dragRef.current = null
-  }
-
-  const handleNodeClick = (e, nodeId) => {
-    // Ignore click if we just finished dragging (mousemove fired)
-    if (e.defaultPrevented) return
-    setSelected(prev => prev === nodeId ? null : nodeId)
-  }
-
   // Calculer les rayons
   const maxNb = useMemo(() => clusters ? Math.max(...clusters.map(c => c.nb)) : 1, [clusters])
-
   const scaleR = (nb) => MIN_R + (MAX_R - MIN_R) * Math.sqrt(nb / maxNb)
 
-  // Lancer la simulation D3
-  useEffect(() => {
-    if (!clusters?.length) return
-    if (simRef.current) simRef.current.stop()
-
-    const PAD = 8
+  // Positionner les bulles depuis les coordonnées UMAP + résolution des chevauchements
+  const nodes = useMemo(() => {
+    if (!clusters?.length) return []
     const MARGIN = 80
     const cxMin = Math.min(...clusters.map(c => c.cx))
     const cxMax = Math.max(...clusters.map(c => c.cx))
@@ -112,35 +70,32 @@ export default function Disciplines({ data, filters, isDarkMode }) {
     const mapX = cx => MARGIN + (cx - cxMin) / (cxMax - cxMin) * (dims.w - MARGIN * 2)
     const mapY = cy => MARGIN + (cy - cyMin) / (cyMax - cyMin) * (dims.h - MARGIN * 2)
 
-    const initial = clusters.map(c => ({
+    const pts = clusters.map(c => ({
       ...c,
       r: scaleR(c.nb),
-      x: mapX(c.cx),
+      tx: mapX(c.cx), // position cible (UMAP)
+      ty: mapY(c.cy),
+      x: mapX(c.cx),  // position initiale (sera mutée)
       y: mapY(c.cy),
     }))
 
-    simRef.current = forceSimulation(initial)
-      .force('charge', forceManyBody().strength(8))
-      .force('center', forceCenter(dims.w / 2, dims.h / 2).strength(0.05))
-      .force('collision', forceCollide(d => d.r + PAD).strength(0.9))
-      .force('umap', () => {
-        const alpha = simRef.current.alpha()
-        for (const n of simRef.current.nodes()) {
-          n.vx += (mapX(n.cx) - n.x) * alpha * 0.4
-          n.vy += (mapY(n.cy) - n.y) * alpha * 0.4
-        }
-      })
-      .force('bounds', () => {
-        for (const n of simRef.current.nodes()) {
-          n.x = Math.max(n.r + PAD, Math.min(dims.w - n.r - PAD, n.x))
-          n.y = Math.max(n.r + PAD, Math.min(dims.h - n.r - PAD, n.y))
-        }
-      })
-      .alphaDecay(0.012)
-      .on('tick', () => setNodes(simRef.current.nodes().map(n => ({ ...n }))))
+    // Simulation one-shot : collision uniquement, attraction vers la position UMAP
+    forceSimulation(pts)
+      .force('collide', forceCollide(d => d.r + 3).strength(1))
+      .force('x', forceX(d => d.tx).strength(0.15))
+      .force('y', forceY(d => d.ty).strength(0.15))
+      .stop()
+      .tick(300)
 
-    return () => simRef.current?.stop()
+    return pts
   }, [clusters, dims])
+
+  // Thèses du cluster sélectionné (hook avant les early returns)
+  const selectedCluster = clusters?.find(c => c.id === selected) ?? null
+  const clusterTheses = useMemo(() => {
+    if (!selectedCluster) return []
+    return allData.filter(d => d.cluster_id === selectedCluster.id)
+  }, [selectedCluster])
 
   // --- États de chargement / erreur / vide ---
   if (error) return (
@@ -166,8 +121,6 @@ export default function Disciplines({ data, filters, isDarkMode }) {
     </div>
   )
 
-  const selectedCluster = clusters.find(c => c.id === selected)
-
   return (
     <div className="p-8 flex flex-col gap-6">
 
@@ -191,9 +144,6 @@ export default function Disciplines({ data, filters, isDarkMode }) {
             width={dims.w}
             height={dims.h}
             className="block"
-            onMouseMove={handleSvgMouseMove}
-            onMouseUp={handleSvgMouseUp}
-            onMouseLeave={handleSvgMouseUp}
           >
             {nodes.map(node => {
               const isHov = hovered === node.id
@@ -206,11 +156,10 @@ export default function Disciplines({ data, filters, isDarkMode }) {
                 <g
                   key={node.id}
                   transform={`translate(${node.x},${node.y})`}
-                  style={{ cursor: dragRef.current === node.id ? 'grabbing' : 'grab' }}
-                  onMouseDown={(e) => handleNodeMouseDown(e, node.id)}
+                  style={{ cursor: 'pointer' }}
                   onMouseEnter={() => setHovered(node.id)}
                   onMouseLeave={() => setHovered(null)}
-                  onClick={(e) => handleNodeClick(e, node.id)}
+                  onClick={() => { setSelected(prev => { const next = prev === node.id ? null : node.id; if (next !== prev) setShowTheses(false); return next }) }}
                 >
                   {/* Cercle principal */}
                   <circle
@@ -229,7 +178,7 @@ export default function Disciplines({ data, filters, isDarkMode }) {
                       dominantBaseline="middle"
                       fontSize={fontSize}
                       fontWeight={isSel ? 700 : 500}
-                      fill={isSel || isHov ? '#1e293b' : '#334155'}
+                      fill={isDarkMode ? (isSel || isHov ? '#f1f5f9' : '#cbd5e1') : (isSel || isHov ? '#1e293b' : '#334155')}
                       style={{ pointerEvents: 'none', userSelect: 'none' }}
                     >
                       {/* Découper le label en 2 lignes si besoin */}
@@ -267,16 +216,17 @@ export default function Disciplines({ data, filters, isDarkMode }) {
                         width={200}
                         height={16 + (node.keywords?.length ?? 0) * 14 + 18}
                         rx={8}
-                        fill="white"
-                        stroke="#e2e8f0"
+                        fill={isDarkMode ? '#1e293b' : '#ffffff'}
+                        fillOpacity={1}
+                        stroke={isDarkMode ? '#334155' : '#cbd5e1'}
                         strokeWidth={1}
-                        filter="drop-shadow(0 2px 6px rgba(0,0,0,0.12))"
+                        filter="drop-shadow(0 4px 12px rgba(0,0,0,0.25))"
                       />
-                      <text x={10} y={14} fontSize={11} fontWeight={700} fill="#1e293b">
+                      <text x={10} y={14} fontSize={11} fontWeight={700} fill={isDarkMode ? '#f1f5f9' : '#1e293b'}>
                         {node.label}
                       </text>
                       {node.keywords?.slice(0, 6).map((kw, i) => (
-                        <text key={kw} x={10} y={14 + (i + 1) * 14} fontSize={10} fill="#64748b">
+                        <text key={kw} x={10} y={14 + (i + 1) * 14} fontSize={10} fill={isDarkMode ? '#94a3b8' : '#64748b'}>
                           • {kw}
                         </text>
                       ))}
@@ -326,7 +276,7 @@ export default function Disciplines({ data, filters, isDarkMode }) {
                   {selectedCluster.label}
                 </p>
                 <button
-                  onClick={() => setSelected(null)}
+                  onClick={() => { setSelected(null); setShowTheses(false) }}
                   className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 text-xs shrink-0"
                 >
                   ✕
@@ -394,6 +344,18 @@ export default function Disciplines({ data, filters, isDarkMode }) {
                   </div>
                 </div>
               )}
+
+              <button
+                onClick={() => setShowTheses(v => !v)}
+                className="w-full mt-1 text-xs font-semibold py-2 px-3 rounded-xl border transition-colors"
+                style={{
+                  backgroundColor: getColor(selectedCluster.cnu_dominant) + '18',
+                  borderColor: getColor(selectedCluster.cnu_dominant) + '50',
+                  color: getColor(selectedCluster.cnu_dominant),
+                }}
+              >
+                {showTheses ? '▲ Masquer les thèses' : `▼ Voir les ${clusterTheses.length} thèses`}
+              </button>
             </div>
           )}
 
@@ -405,6 +367,42 @@ export default function Disciplines({ data, filters, isDarkMode }) {
 
         </div>
       </div>
+
+      {/* Liste des thèses du cluster sélectionné */}
+      {showTheses && selectedCluster && clusterTheses.length > 0 && (
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+          <div className="flex items-center justify-between px-5 py-3 border-b border-slate-100 dark:border-slate-800">
+            <div>
+              <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">{selectedCluster.label}</span>
+              <span className="ml-2 text-xs text-slate-400">{clusterTheses.length} thèses</span>
+            </div>
+            <button onClick={() => setShowTheses(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 text-xs">✕</button>
+          </div>
+          <div className="divide-y divide-slate-100 dark:divide-slate-800 max-h-80 overflow-y-auto">
+            {clusterTheses.map(t => (
+              <div key={t.id} className="px-5 py-3 flex items-start gap-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-slate-800 dark:text-slate-100 leading-snug">{t.titre}</p>
+                  <div className="flex flex-wrap gap-2 mt-1.5">
+                    <span className="text-xs text-slate-400 dark:text-slate-500">{t.annee}</span>
+                    <span className="text-xs text-slate-400 dark:text-slate-500">·</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400">{t.etablissement_norm}</span>
+                    {t.directeurs?.length > 0 && (
+                      <>
+                        <span className="text-xs text-slate-400 dark:text-slate-500">·</span>
+                        <span className="text-xs text-slate-400 dark:text-slate-500">{t.directeurs.join(', ')}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+                {t.accessible && (
+                  <span className="shrink-0 text-xs bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50 rounded-full px-2 py-0.5">OA</span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Chart 2 & 3: Keyword Trends and Drill-Down */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 min-h-[500px] mt-4">

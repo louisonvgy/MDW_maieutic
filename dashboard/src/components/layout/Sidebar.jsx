@@ -17,25 +17,27 @@ export default function Sidebar({ filters, onChange, activePage, onNavigate, isD
 
   return (
     <aside className="w-64 shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 h-screen sticky top-0 flex flex-col transition-colors">
-      <div className="p-6 overflow-y-auto custom-scrollbar flex flex-col gap-6 flex-1">
-      <div className="flex items-start justify-between">
-        <div>
-          <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">M@ieutic</span>
-          <div className="flex items-center gap-3 mt-1">
-            <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100">Cartographie des thèses</h1>
-            <button 
-              onClick={toggleDarkMode} 
-              className="p-1.5 rounded-full cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0" 
+      {/* Logo pleine largeur */}
+      <img
+        src={isDarkMode ? "/logo-maieutic-blanc.png" : "/logo-maieutic2.png"}
+        alt="M@ieutic"
+        className="w-full h-28 object-contain"
+      />
+
+      <div className="px-6 pb-6 overflow-y-auto custom-scrollbar flex flex-col gap-6 flex-1">
+      <div className="flex items-center justify-between">
+          <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 leading-tight">Cartographie des thèses</h1>
+            <button
+              onClick={toggleDarkMode}
+              className="p-1.5 rounded-full cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
               title={isDarkMode ? "Passer au mode clair" : "Passer au mode nuit"}
             >
-              <img 
-                src={isDarkMode ? "/mode-lumiere.png" : "/mode-nuit.png"} 
-                alt={isDarkMode ? "Soleil" : "Lune"} 
+              <img
+                src={isDarkMode ? "/mode-lumiere.png" : "/mode-nuit.png"}
+                alt={isDarkMode ? "Soleil" : "Lune"}
                 className="w-6 h-6 object-contain"
               />
             </button>
-          </div>
-        </div>
       </div>
 
       <nav className="flex flex-col gap-1">
@@ -70,23 +72,27 @@ export default function Sidebar({ filters, onChange, activePage, onNavigate, isD
           </select>
         </label>
 
-        <label className="flex flex-col gap-1">
-          <span className="text-xs text-slate-500">Section CNU</span>
-          <select value={filters.cnu ?? ''} onChange={set('cnu')}
-            className="text-sm border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1.5 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none">
-            <option value="">Toutes</option>
-            {cnus.map(c => <option key={c} value={c}>{c}</option>)}
-          </select>
-        </label>
+        {activePage !== 'disciplines' && (
+          <label className="flex flex-col gap-1">
+            <span className="text-xs text-slate-500">Section CNU</span>
+            <select value={filters.cnu ?? ''} onChange={set('cnu')}
+              className="text-sm border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1.5 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none">
+              <option value="">Toutes</option>
+              {cnus.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </label>
+        )}
 
-        <label className="flex flex-col gap-1">
-          <span className="text-xs text-slate-500">Établissement</span>
-          <select value={filters.etablissement ?? ''} onChange={set('etablissement')}
-            className="text-sm border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1.5 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none">
-            <option value="">Tous</option>
-            {etabs.map(e => <option key={e} value={e}>{e}</option>)}
-          </select>
-        </label>
+        {activePage !== 'disciplines' && (
+          <label className="flex flex-col gap-1">
+            <span className="text-xs text-slate-500">Établissement</span>
+            <select value={filters.etablissement ?? ''} onChange={set('etablissement')}
+              className="text-sm border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1.5 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none">
+              <option value="">Tous</option>
+              {etabs.map(e => <option key={e} value={e}>{e}</option>)}
+            </select>
+          </label>
+        )}
 
         {(filters.annee || filters.cnu || filters.etablissement) && (
           <button onClick={() => onChange({ annee: null, cnu: null, etablissement: null })}

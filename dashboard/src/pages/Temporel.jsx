@@ -138,7 +138,7 @@ export default function Temporel({ data = [] }) {
   }, [data])
 
   if (processed.total === 0) {
-    return <div className="p-8">Aucun résultat pour votre filtre</div>
+    return <div className="p-8">Aucun résultats pour votre recherche</div>
   }
 
   return (
