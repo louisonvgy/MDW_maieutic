@@ -1,10 +1,26 @@
 import { useMemo, useState, useRef, useEffect } from 'react'
 import ForceGraph from '../components/charts/ForceGraph'
-import KeywordTrends from '../components/charts/KeywordTrends'
-import KeywordDrillDown from '../components/charts/KeywordDrillDown'
+import ArcDiagram from '../components/charts/ArcDiagram'
 import MapNetwork from '../components/charts/MapNetwork'
 
-export default function Reseau({ data, filters }) {
+function KpiCard({ label, value, sub, color = 'indigo' }) {
+  const colors = {
+    indigo: 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 border-indigo-100 dark:border-indigo-800/50',
+    emerald: 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border-emerald-100 dark:border-emerald-800/50',
+    amber: 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border-amber-100 dark:border-amber-800/50',
+    rose: 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 border-rose-100 dark:border-rose-800/50',
+    violet: 'bg-violet-50 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 border-violet-100 dark:border-violet-800/50',
+  }
+  return (
+    <div className={`rounded-2xl border p-5 flex flex-col gap-1 ${colors[color]}`}>
+      <span className="text-xs font-semibold uppercase tracking-widest opacity-60">{label}</span>
+      <span className="text-3xl font-bold">{value}</span>
+      {sub && <span className="text-xs opacity-70">{sub}</span>}
+    </div>
+  )
+}
+
+export default function Reseau({ data, filters, isDarkMode }) {
   const [graphWidth, setGraphWidth] = useState(800)
   const containerRef = useRef()
 
@@ -58,8 +74,8 @@ export default function Reseau({ data, filters }) {
 
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-slate-800">Analyse de réseau</h2>
-        <p className="text-slate-500 text-sm mt-1">
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Analyse de réseau</h2>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
           Collaborations entre directeurs, co-encadrements et liens inter-établissements
         </p>
       </div>
@@ -86,52 +102,31 @@ export default function Reseau({ data, filters }) {
         </div>
       </div>
 
-      {/* Chart 1: Force-directed co-direction graph */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-5">
-        <p className="text-sm font-semibold text-slate-700 mb-1">🔗 Réseau des co-directions</p>
-        <p className="text-xs text-slate-400 mb-4">
-          Chaque nœud est un directeur de thèse. Un lien relie deux chercheurs ayant co-dirigé au moins une thèse.
-          La taille du nœud reflète le nombre de thèses dirigées, l'épaisseur du lien le nombre de co-directions.
+      {/* Chart 1: Arc Diagram */}
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm dark:shadow-xl">
+        <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-1">Réseau de co-direction (Top 100)</p>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+          Chaque nœud représente l'un des directeurs ayant le plus de collaborations. Les arcs relient les auteurs lorsqu'ils co-dirigent des thèses ensemble. L'épaisseur indique le volume de collaborations.
         </p>
-        <div className="rounded-xl overflow-hidden bg-slate-50 border border-slate-100">
+        <div className="rounded-xl overflow-hidden">
+          <ArcDiagram data={data} filters={filters} isDarkMode={isDarkMode} />
+        </div>
+      </div>
+
+      {/* Chart 1.5: Graphe de Force Restitué */}
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-xl">
+        <p className="text-sm font-semibold text-slate-700 dark:text-slate-100 mb-1">Exploration interactive des co-directions</p>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+          Graphique de force (Nœud = Auteur). Déplacez le curseur pour filtrer et nettoyer le graphe.
+        </p>
+        <div className="rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800">
           <ForceGraph data={data} width={graphWidth > 0 ? graphWidth : 800} height={550} />
         </div>
       </div>
 
-      {/* Chart 2 & 3: Keyword Trends and Drill-Down */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 min-h-[500px]">
-        {/* Trend Chart */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-5 flex flex-col">
-          <p className="text-sm font-semibold text-slate-700 mb-1">📈 Tendances des mots-clés</p>
-          <p className="text-xs text-slate-400 mb-4 flex-none">
-            {filters?.annee 
-              ? `Top mot-clé par domaine (CNU) pour l'année ${filters.annee}.`
-              : "Chaque courbe représente une discipline (CNU). Survolez les points pour découvrir quel était le mot le plus utilisé cette année-là !"}
-          </p>
-          <div className="flex-1 w-full relative">
-            <KeywordTrends data={data} selectedYear={filters?.annee} />
-          </div>
-        </div>
-
-        {/* Drill-down Chart */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-5 flex flex-col">
-          <p className="text-sm font-semibold text-slate-700 mb-1">🔍 Exploration Profonde (Drill-Down)</p>
-          <p className="text-xs text-slate-400 mb-4 flex-none">
-            Cliquez sur un arc pour plonger dans la donnée : Disciplines (CNU) → Années → Mots-clés.
-          </p>
-          <div className="flex-1 w-full relative">
-            <KeywordDrillDown filters={filters} />
-          </div>
-        </div>
-      </div>
-
-      {/* Chart 3: Map with inter-establishment links */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-5">
-        <p className="text-sm font-semibold text-slate-700 mb-1">🏛️ Réseau inter-établissements</p>
-        <p className="text-xs text-slate-400 mb-4">
-          Les lignes sur la carte relient les établissements partageant au moins un directeur de thèse.
-          L'épaisseur du trait reflète le nombre de directeurs partagés.
-        </p>
+      {/* Chart 2: Map with inter-establishment links */}
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+        <p className="text-sm font-semibold text-slate-700 dark:text-slate-100 mb-4">Réseau inter-établissements</p>
         <MapNetwork data={data} filters={filters} />
       </div>
 

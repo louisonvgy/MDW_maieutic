@@ -23,12 +23,12 @@ const CustomTooltip = ({ active, payload, label, isBar }) => {
     if (isBar) {
       const p = payload[0]
       return (
-        <div className="bg-white border border-slate-200 shadow-xl rounded-xl p-3 text-sm min-w-[200px] z-50">
-          <p className="font-bold text-slate-700 mb-1 leading-tight">{p.payload.fullCnu}</p>
-          <div className="mt-2 text-slate-600">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl rounded-xl p-3 text-sm min-w-[200px] z-50">
+          <p className="font-bold text-slate-700 dark:text-slate-100 mb-1 leading-tight">{p.payload.fullCnu}</p>
+          <div className="mt-2 text-slate-600 dark:text-slate-300">
             Mot n°1 : <span className="font-bold text-base" style={{ color: p.fill }}>"{p.payload.word}"</span>
             <br />
-            <span className="text-xs text-slate-400">({p.value} occurrences cette année-là)</span>
+            <span className="text-xs text-slate-400 dark:text-slate-500">({p.value} occurrences cette année-là)</span>
           </div>
         </div>
       )
@@ -38,17 +38,17 @@ const CustomTooltip = ({ active, payload, label, isBar }) => {
     const sortedPayload = [...payload].sort((a, b) => b.value - a.value)
 
     return (
-      <div className="bg-white border border-slate-200 shadow-xl rounded-xl p-3 text-sm min-w-[250px] max-h-[300px] overflow-y-auto no-scrollbar z-50">
-        <p className="font-bold text-slate-800 border-b border-slate-100 pb-2 mb-2 sticky top-0 bg-white">Année {label}</p>
-        <div className="flex flex-col gap-1.5">
+      <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border border-slate-200 dark:border-slate-800 shadow-2xl rounded-xl p-3 text-sm min-w-[250px] z-50 pointer-events-none">
+        <p className="font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800 pb-1.5 mb-1.5 sticky top-0 bg-transparent">Année {label}</p>
+        <div className="flex flex-col gap-1">
           {sortedPayload.map(p => {
             if (p.value === 0) return null; // hide 0 values
             return (
-              <div key={p.dataKey} className="flex flex-col bg-slate-50 px-3 py-1.5 rounded-md" style={{ borderLeft: `4px solid ${p.stroke}` }}>
-                <span className="font-semibold text-slate-600 text-xs truncate" title={p.dataKey}>{p.dataKey}</span>
-                <div className="flex justify-between items-baseline mt-0.5">
-                  <span className="font-bold text-slate-800" style={{ color: p.stroke }}>"{p.payload[`word_${p.dataKey}`] || '-'}"</span>
-                  <span className="text-xs text-slate-500 font-medium ml-2">{p.value} occ.</span>
+              <div key={p.dataKey} className="flex flex-col bg-slate-50 dark:bg-slate-800 px-2.5 py-1 rounded-md" style={{ borderLeft: `3px solid ${p.stroke}` }}>
+                <span className="font-semibold text-slate-600 dark:text-slate-300 text-[10px] uppercase tracking-wider truncate" title={p.dataKey}>{p.dataKey}</span>
+                <div className="flex justify-between items-baseline mt-px">
+                  <span className="font-bold text-slate-800 dark:text-slate-100 text-[13px]" style={{ color: p.stroke }}>"{p.payload[`word_${p.dataKey}`] || '-'}"</span>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium ml-2">{p.value} occ.</span>
                 </div>
               </div>
             )
@@ -157,14 +157,14 @@ export default function KeywordTrends({ data, selectedYear }) {
 
   if (!chartData.length) {
     return (
-      <div className="h-[400px] flex flex-col items-center justify-center bg-slate-50 border border-dashed border-slate-200 rounded-xl">
-        <p className="text-slate-400 text-sm">Pas assez de données pour afficher les tendances.</p>
+      <div className="h-[400px] flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900 border border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
+        <p className="text-slate-400 dark:text-slate-500 text-sm">Pas assez de données pour afficher les tendances.</p>
       </div>
     )
   }
 
   return (
-    <div className="h-[400px] w-full mt-4 bg-white rounded-xl">
+    <div className="h-[400px] w-full mt-4 bg-transparent rounded-xl">
       <ResponsiveContainer width="100%" height="100%">
         {isBar ? (
           <BarChart data={chartData} layout="vertical" margin={{ left: -10, right: 100, top: 10, bottom: 10 }}>

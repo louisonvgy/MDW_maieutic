@@ -58,11 +58,11 @@ const TooltipStyle = {
 function TopSelector({ value, onChange }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="text-xs text-slate-500">Top</span>
+      <span className="text-xs text-slate-500 dark:text-slate-400">Top</span>
       <select
         value={value}
         onChange={e => onChange(Number(e.target.value))}
-        className="text-sm border border-slate-200 rounded-lg px-2 py-1 bg-slate-50 text-slate-700"
+        className="text-sm border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none"
       >
         {[5, 10, 20, 30, 50].map(n => (
           <option key={n} value={n}>{n}</option>
@@ -74,7 +74,7 @@ function TopSelector({ value, onChange }) {
 
 function Card({ children, className = '' }) {
   return (
-    <div className={`bg-white rounded-2xl border border-slate-200 p-5 ${className}`}>
+    <div className={`bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 ${className}`}>
       {children}
     </div>
   )
@@ -112,8 +112,8 @@ export default function Concentration({ data }) {
     <div className="p-8 flex flex-col gap-8">
 
       <div>
-        <h2 className="text-2xl font-bold text-slate-800">Concentration</h2>
-        <p className="text-slate-500 text-sm mt-1">
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Concentration</h2>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
           Distribution des thèses par établissement et directeur
         </p>
       </div>
@@ -121,7 +121,7 @@ export default function Concentration({ data }) {
       {/* Établissements */}
       <Card>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-semibold text-slate-700">Thèses par établissement</h3>
+          <h3 className="text-base font-semibold text-slate-700 dark:text-slate-100">Thèses par établissement</h3>
           <TopSelector value={topEtab} onChange={setTopEtab} />
         </div>
         <ResponsiveContainer width="100%" height={Math.max(300, topEtab * 28)}>
@@ -138,7 +138,7 @@ export default function Concentration({ data }) {
       {/* Directeurs */}
       <Card>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-semibold text-slate-700">Thèses par directeur</h3>
+          <h3 className="text-base font-semibold text-slate-700 dark:text-slate-100">Thèses par directeur</h3>
           <TopSelector value={topDir} onChange={setTopDir} />
         </div>
         <ResponsiveContainer width="100%" height={Math.max(300, topDir * 28)}>

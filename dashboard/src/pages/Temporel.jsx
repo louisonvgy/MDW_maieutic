@@ -43,7 +43,7 @@ function SimpleTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null
 
   return (
-    <div className="rounded-2xl border bg-white p-3 shadow-xl text-sm">
+    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 shadow-xl text-sm text-slate-800 dark:text-slate-100">
       <div className="mb-1 font-semibold">{label}</div>
       {payload.map(entry => (
         <div key={entry.dataKey} style={{ color: entry.color }}>
@@ -57,9 +57,9 @@ function SimpleTooltip({ active, payload, label }) {
 
 function Card({ title, description, children, height = 360 }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <div className="mb-1 text-base font-semibold text-slate-800">{title}</div>
-      {description && <div className="mb-3 text-xs text-slate-400">{description}</div>}
+    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm">
+      <div className="mb-1 text-base font-semibold text-slate-800 dark:text-slate-100">{title}</div>
+      {description && <div className="mb-3 text-xs text-slate-400 dark:text-slate-500">{description}</div>}
       <div style={{ height }}>{children}</div>
     </div>
   )
@@ -145,12 +145,12 @@ export default function Temporel({ data = [] }) {
     <div className="flex flex-col gap-8 p-8">
       <div className="flex items-end justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800">Évolution temporelle</h2>
-          <p className="mt-1 text-sm text-slate-500">
+          <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Évolution temporelle</h2>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             Analyse des thèses dans le temps par année et discipline
           </p>
         </div>
-        <span className="rounded-xl bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-500">
+        <span className="rounded-xl bg-slate-100 dark:bg-slate-800 px-3 py-1.5 text-xs font-medium text-slate-500 dark:text-slate-400">
           {processed.total.toLocaleString('fr-FR')} enregistrements
         </span>
       </div>

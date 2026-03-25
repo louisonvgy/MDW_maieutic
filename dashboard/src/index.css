@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 @theme {
   --color-mandarine-50: #fef3e2;
   --color-mandarine-100: #fde6c0;
@@ -23,8 +25,13 @@
 body {
   margin: 0;
   font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
-  background: #f8fafc;
-  color: #1e293b;
+  background-color: var(--color-slate-50);
+  color: var(--color-slate-800);
+}
+
+html.dark body {
+  background-color: var(--color-slate-950);
+  color: var(--color-slate-100);
 }
 
 #root {

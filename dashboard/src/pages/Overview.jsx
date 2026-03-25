@@ -49,19 +49,19 @@ function highlight(text, query) {
 
 function ThesisCard({ thesis, query }) {
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col gap-2 hover:shadow-md transition-shadow">
-      <p className="text-sm font-semibold text-slate-800 leading-snug">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col gap-2 hover:shadow-md transition-shadow">
+      <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 leading-snug">
         {highlight(thesis.titre, query)}
       </p>
       <div className="flex flex-wrap gap-2 text-xs">
         <span className="bg-canard-50 text-canard-700 border border-canard-100 rounded-full px-2.5 py-0.5 font-medium">{thesis.annee}</span>
-        <span className="bg-slate-100 text-slate-600 rounded-full px-2.5 py-0.5">{thesis.etablissement_norm}</span>
-        <span className="bg-amber-50 text-amber-700 border border-amber-100 rounded-full px-2.5 py-0.5">{thesis.cnu} – {CNU_LABELS[thesis.cnu] || thesis.cnu}</span>
-        {thesis.accessible && <span className="bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-full px-2.5 py-0.5">Open Access</span>}
+        <span className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-full px-2.5 py-0.5">{thesis.etablissement_norm}</span>
+        <span className="bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-100 dark:border-amber-800/50 rounded-full px-2.5 py-0.5">{thesis.cnu} – {CNU_LABELS[thesis.cnu] || thesis.cnu}</span>
+        {thesis.accessible && <span className="bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50 rounded-full px-2.5 py-0.5">Open Access</span>}
       </div>
       {thesis.directeurs?.length > 0 && (
-        <p className="text-xs text-slate-500">
-          <span className="font-medium text-slate-600">Directeur{thesis.directeurs.length > 1 ? 's' : ''} : </span>
+        <p className="text-xs text-slate-500 dark:text-slate-400">
+          <span className="font-medium text-slate-600 dark:text-slate-300">Directeur{thesis.directeurs.length > 1 ? 's' : ''} : </span>
           {thesis.directeurs.join(', ')}
         </p>
       )}
@@ -111,15 +111,15 @@ export default function Overview({ data, query = '', onQueryChange }) {
 
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-slate-800">Vue d'ensemble</h2>
-        <p className="text-slate-500 text-sm mt-1">
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Vue d'ensemble</h2>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
           {stats.nbTheses.toLocaleString('fr-FR')} thèses · 2021–2026 · {stats.nbEtabs} établissements
         </p>
       </div>
 
       {/* Barre de recherche */}
       <div className="relative">
-        <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
         <input
@@ -127,10 +127,10 @@ export default function Overview({ data, query = '', onQueryChange }) {
           value={query}
           onChange={e => onQueryChange(e.target.value)}
           placeholder="Rechercher des thèses"
-          className="w-full pl-12 pr-10 py-4 text-base border border-slate-300 rounded-2xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-canard-400 focus:border-transparent placeholder-slate-400"
+          className="w-full pl-12 pr-10 py-4 text-base border border-slate-300 dark:border-slate-700 rounded-2xl bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-sm focus:outline-none focus:ring-2 focus:ring-canard-400 focus:border-transparent placeholder-slate-400 dark:placeholder-slate-600 transition-colors"
         />
         {query && (
-          <button onClick={() => onQueryChange('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">✕</button>
+          <button onClick={() => onQueryChange('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300">✕</button>
         )}
       </div>
 
@@ -179,22 +179,22 @@ export default function Overview({ data, query = '', onQueryChange }) {
       </div>
 
       {/* Évolution annuelle */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-5">
-        <p className="text-sm font-semibold text-slate-700 mb-3">Évolution annuelle</p>
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+        <p className="text-sm font-semibold text-slate-700 dark:text-slate-100 mb-3">Évolution annuelle</p>
         <div className="flex items-end gap-6">
           <div className="flex-1">
             <SparkLine data={stats.sparkData} />
             <div className="flex justify-between mt-1">
               {stats.sparkData.map(d => (
-                <span key={d.annee} className="text-xs text-slate-400">{d.annee}</span>
+                <span key={d.annee} className="text-xs text-slate-400 dark:text-slate-500">{d.annee}</span>
               ))}
             </div>
           </div>
           <div className="text-right shrink-0">
             {stats.sparkData.map(d => (
-              <div key={d.annee} className="text-xs text-slate-600">
+              <div key={d.annee} className="text-xs text-slate-600 dark:text-slate-300">
                 <span className="font-medium">{d.nb.toLocaleString('fr-FR')}</span>
-                <span className="text-slate-400 ml-1">en {d.annee}</span>
+                <span className="text-slate-400 dark:text-slate-500 ml-1">en {d.annee}</span>
               </div>
             ))}
           </div>
@@ -203,8 +203,8 @@ export default function Overview({ data, query = '', onQueryChange }) {
 
       {/* Carte + CNU */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-        <div className="xl:col-span-2 bg-white rounded-2xl border border-slate-200 p-5">
-          <p className="text-sm font-semibold text-slate-700 mb-3">Répartition géographique</p>
+        <div className="xl:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+          <p className="text-sm font-semibold text-slate-700 dark:text-slate-100 mb-3">Répartition géographique</p>
           <div className="rounded-xl overflow-hidden" style={{ height: 380 }}>
             <MapContainer center={[46.5, 2.5]} zoom={5} style={{ height: '100%', width: '100%' }} scrollWheelZoom={false}>
               <TileLayer
@@ -228,16 +228,16 @@ export default function Overview({ data, query = '', onQueryChange }) {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-200 p-5">
-          <p className="text-sm font-semibold text-slate-700 mb-4">Par section CNU</p>
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+          <p className="text-sm font-semibold text-slate-700 dark:text-slate-100 mb-4">Par section CNU</p>
           <div className="flex flex-col gap-3">
             {stats.cnuData.map(({ cnu, label, nb, pct }) => (
               <div key={cnu}>
                 <div className="flex justify-between text-xs mb-1">
-                  <span className="text-slate-700 font-medium">{cnu} – {label}</span>
-                  <span className="text-slate-500">{nb.toLocaleString('fr-FR')}</span>
+                  <span className="text-slate-700 dark:text-slate-200 font-medium">{cnu} – {label}</span>
+                  <span className="text-slate-500 dark:text-slate-400">{nb.toLocaleString('fr-FR')}</span>
                 </div>
-                <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                   <div className="h-full bg-mandarine-500 rounded-full transition-all" style={{ width: `${pct}%` }} />
                 </div>
               </div>
