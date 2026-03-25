@@ -10,7 +10,7 @@ export default function SparkLine({ data }) {
           formatter={(v) => [v.toLocaleString('fr-FR'), 'thèses']}
           labelFormatter={(l) => `${l}`}
         />
-        <Bar dataKey="nb" fill="#6366f1" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="nb" fill="#016d76" radius={[4, 4, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   )

@@ -18,15 +18,20 @@ const CNU_LABELS = {
 
 function KpiCard({ label, value, sub, color = 'indigo' }) {
   const colors = {
-    indigo: 'bg-indigo-50 text-indigo-700 border-indigo-100',
+    indigo:      'bg-canard-50 text-canard-700 border-canard-100',
+    canardlight: 'bg-canard-100 text-canard-800 border-canard-200',
+    orange:      'bg-mandarine-50 text-mandarine-700 border-mandarine-100',
+    ocre:        'bg-mandarine-100 text-mandarine-700 border-mandarine-200',
     emerald: 'bg-emerald-50 text-emerald-700 border-emerald-100',
-    amber: 'bg-amber-50 text-amber-700 border-amber-100',
-    rose: 'bg-rose-50 text-rose-700 border-rose-100',
+    amber:   'bg-amber-50 text-amber-700 border-amber-100',
+    rose:    'bg-rose-50 text-rose-700 border-rose-100',
+    bluegrey:'bg-slate-100 text-slate-600 border-slate-200',
+    blue:    'bg-blue-50 text-blue-700 border-blue-100',
   }
   return (
-    <div className={`rounded-2xl border p-5 flex flex-col gap-1 ${colors[color]}`}>
+    <div className={`rounded-2xl border p-3.5 flex flex-col gap-0.5 ${colors[color]}`}>
       <span className="text-xs font-semibold uppercase tracking-widest opacity-60">{label}</span>
-      <span className="text-3xl font-bold">{value}</span>
+      <span className="text-2xl font-bold">{value}</span>
       {sub && <span className="text-xs opacity-70">{sub}</span>}
     </div>
   )
@@ -49,7 +54,7 @@ function ThesisCard({ thesis, query }) {
         {highlight(thesis.titre, query)}
       </p>
       <div className="flex flex-wrap gap-2 text-xs">
-        <span className="bg-indigo-50 text-indigo-700 border border-indigo-100 rounded-full px-2.5 py-0.5 font-medium">{thesis.annee}</span>
+        <span className="bg-canard-50 text-canard-700 border border-canard-100 rounded-full px-2.5 py-0.5 font-medium">{thesis.annee}</span>
         <span className="bg-slate-100 text-slate-600 rounded-full px-2.5 py-0.5">{thesis.etablissement_norm}</span>
         <span className="bg-amber-50 text-amber-700 border border-amber-100 rounded-full px-2.5 py-0.5">{thesis.cnu} – {CNU_LABELS[thesis.cnu] || thesis.cnu}</span>
         {thesis.accessible && <span className="bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-full px-2.5 py-0.5">Open Access</span>}
@@ -121,8 +126,8 @@ export default function Overview({ data, query = '', onQueryChange }) {
           type="text"
           value={query}
           onChange={e => onQueryChange(e.target.value)}
-          placeholder="Rechercher une thèse, un directeur, un établissement…"
-          className="w-full pl-12 pr-10 py-4 text-base border border-slate-300 rounded-2xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent placeholder-slate-400"
+          placeholder="Rechercher des thèses"
+          className="w-full pl-12 pr-10 py-4 text-base border border-slate-300 rounded-2xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-canard-400 focus:border-transparent placeholder-slate-400"
         />
         {query && (
           <button onClick={() => onQueryChange('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">✕</button>
@@ -134,16 +139,16 @@ export default function Overview({ data, query = '', onQueryChange }) {
         <div className="flex flex-col gap-3">
           <button
             onClick={() => setShowResults(v => !v)}
-            className="flex items-center justify-between w-full bg-indigo-50 border border-indigo-200 rounded-2xl px-5 py-4 text-left hover:bg-indigo-100 transition-colors"
+            className="flex items-center justify-between w-full bg-canard-50 border border-canard-200 rounded-2xl px-5 py-4 text-left hover:bg-canard-100 transition-colors"
           >
-            <span className="text-sm text-indigo-700">
+            <span className="text-sm text-canard-700">
               {data.length === 0
                 ? 'Aucun résultat'
-                : <><span className="font-bold text-indigo-800">{data.length.toLocaleString('fr-FR')}</span> thèse{data.length > 1 ? 's' : ''} trouvée{data.length > 1 ? 's' : ''}</>
+                : <><span className="font-bold text-canard-800">{data.length.toLocaleString('fr-FR')}</span> thèse{data.length > 1 ? 's' : ''} trouvée{data.length > 1 ? 's' : ''}</>
               }
             </span>
             <svg
-              className={`w-4 h-4 text-indigo-500 transition-transform ${showResults ? 'rotate-180' : ''}`}
+              className={`w-4 h-4 text-canard-500 transition-transform ${showResults ? 'rotate-180' : ''}`}
               fill="none" stroke="currentColor" viewBox="0 0 24 24"
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -168,9 +173,9 @@ export default function Overview({ data, query = '', onQueryChange }) {
       {/* KPIs */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
         <KpiCard label="Thèses totales" value={stats.nbTheses.toLocaleString('fr-FR')} color="indigo" />
-        <KpiCard label="Établissements" value={stats.nbEtabs} color="amber" />
-        <KpiCard label="Directeurs distincts" value={stats.nbDirecteurs.toLocaleString('fr-FR')} sub="chercheurs encadrants" color="emerald" />
-        <KpiCard label="Co-encadrement" value={`${stats.tauxCoEnc}%`} sub="thèses avec plusieurs directeurs" color="rose" />
+        <KpiCard label="Établissements" value={stats.nbEtabs} color="orange" />
+        <KpiCard label="Directeurs distincts" value={stats.nbDirecteurs.toLocaleString('fr-FR')} sub="chercheurs encadrants" color="indigo" />
+        <KpiCard label="Co-encadrement" value={`${stats.tauxCoEnc}%`} sub="thèses avec plusieurs directeurs" color="orange" />
       </div>
 
       {/* Évolution annuelle */}
@@ -211,7 +216,7 @@ export default function Overview({ data, query = '', onQueryChange }) {
                   key={p.name}
                   center={[p.lat, p.lon]}
                   radius={Math.max(4, Math.sqrt(p.nb / stats.maxNb) * 28)}
-                  pathOptions={{ fillColor: '#6366f1', fillOpacity: 0.65, color: '#4338ca', weight: 1 }}
+                  pathOptions={{ fillColor: '#016d76', fillOpacity: 0.65, color: '#014f57', weight: 1 }}
                 >
                   <Tooltip>
                     <span className="font-semibold">{p.name}</span><br />
@@ -233,7 +238,7 @@ export default function Overview({ data, query = '', onQueryChange }) {
                   <span className="text-slate-500">{nb.toLocaleString('fr-FR')}</span>
                 </div>
                 <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-indigo-400 rounded-full transition-all" style={{ width: `${pct}%` }} />
+                  <div className="h-full bg-mandarine-500 rounded-full transition-all" style={{ width: `${pct}%` }} />
                 </div>
               </div>
             ))}

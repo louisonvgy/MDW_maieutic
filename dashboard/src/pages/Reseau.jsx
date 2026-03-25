@@ -66,11 +66,11 @@ export default function Reseau({ data, filters }) {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
-        <div className="rounded-2xl border p-5 flex flex-col gap-1 bg-violet-50 text-violet-700 border-violet-100">
+        <div className="rounded-2xl border p-5 flex flex-col gap-1 bg-canard-50 text-canard-700 border-canard-100">
           <span className="text-xs font-semibold uppercase tracking-widest opacity-60">Directeurs distincts</span>
           <span className="text-3xl font-bold">{stats.nbDirecteurs.toLocaleString('fr-FR')}</span>
         </div>
-        <div className="rounded-2xl border p-5 flex flex-col gap-1 bg-indigo-50 text-indigo-700 border-indigo-100">
+        <div className="rounded-2xl border p-5 flex flex-col gap-1 bg-canard-100 text-canard-800 border-canard-200">
           <span className="text-xs font-semibold uppercase tracking-widest opacity-60">Thèses co-dirigées</span>
           <span className="text-3xl font-bold">{stats.nbCoDir.toLocaleString('fr-FR')}</span>
           <span className="text-xs opacity-70">{stats.pctCoDir}% du corpus</span>

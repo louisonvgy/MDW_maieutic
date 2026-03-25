@@ -2,7 +2,7 @@ import { useMemo, useRef, useCallback, useEffect, useState } from 'react'
 import ForceGraph2D from 'react-force-graph-2d'
 
 const COLORS = [
-  '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#ec4899',
+  '#016d76', '#ec8927', '#a855f7', '#d946ef', '#ec4899',
   '#f43f5e', '#ef4444', '#f97316', '#eab308', '#22c55e',
   '#14b8a6', '#06b6d4', '#3b82f6', '#1d4ed8', '#7c3aed',
 ]
@@ -116,7 +116,7 @@ export default function ForceGraph({ data, width = 800, height = 550 }) {
           onChange={e => setMinTheses(+e.target.value)}
           className="w-32"
         />
-        <span className="text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">
+        <span className="text-xs font-medium text-canard-600 bg-canard-50 px-2 py-0.5 rounded-full">
           ≥ {minTheses} thèse{minTheses > 1 ? 's' : ''}
         </span>
         <span className="text-xs text-slate-400">
@@ -141,7 +141,7 @@ export default function ForceGraph({ data, width = 800, height = 550 }) {
             ctx.fill()
           }}
           linkWidth={link => Math.sqrt(link.value) * 1.5}
-          linkColor={() => 'rgba(99, 102, 241, 0.15)'}
+          linkColor={() => 'rgba(1, 109, 118, 0.20)'}
           onNodeHover={handleNodeHover}
           cooldownTicks={100}
           backgroundColor="transparent"

@@ -3,7 +3,7 @@ import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as
 
 // Expanded color palette for all CNUs
 const CNU_PALETTE = [
-  '#6366f1', '#ec4899', '#f59e0b', '#10b981', '#06b6d4',
+  '#016d76', '#ec8927', '#f59e0b', '#10b981', '#06b6d4',
   '#8b5cf6', '#f43f5e', '#14b8a6', '#f97316', '#84cc16',
   '#3b82f6', '#0ea5e9', '#d946ef', '#ef4444', '#eab308',
   '#22c55e', '#a855f7', '#3f6212', '#9f1239', '#1e3a8a'

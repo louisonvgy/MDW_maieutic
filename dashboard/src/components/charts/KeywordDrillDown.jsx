@@ -4,7 +4,7 @@ import { allData } from '../../hooks/useFilteredData'
 
 // Consistent colors for CNUs
 const CNU_PALETTE = [
-  '#6366f1', '#ec4899', '#f59e0b', '#10b981', '#06b6d4',
+  '#016d76', '#ec8927', '#f59e0b', '#10b981', '#06b6d4',
   '#8b5cf6', '#f43f5e', '#14b8a6', '#f97316', '#84cc16',
   '#3b82f6', '#0ea5e9', '#d946ef', '#ef4444', '#eab308',
   '#22c55e', '#a855f7', '#3f6212', '#9f1239', '#1e3a8a'
@@ -110,7 +110,7 @@ export default function KeywordDrillDown({ filters }) {
   return (
     <div className="relative w-full h-[450px] flex flex-col mt-2">
       <div className="flex items-center justify-between px-2 mb-2 z-10">
-        <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100 shadow-sm flex items-center gap-1.5 transition-all">
+        <span className="text-xs font-medium text-canard-600 bg-canard-50 px-3 py-1 rounded-full border border-canard-100 shadow-sm flex items-center gap-1.5 transition-all">
           <span>📍</span> 
           <span className="truncate max-w-[250px]">
             {drillCnu ? drillCnu : 'Vue Globale (Toutes les disciplines)'}
@@ -164,7 +164,7 @@ export default function KeywordDrillDown({ filters }) {
                 {node.value} {drillCnu ? 'occurrences' : 'thèses'}
               </span>
               {!drillCnu && (
-                <div className="mt-2 text-xs text-indigo-500 font-semibold italic">
+                <div className="mt-2 text-xs text-canard-600 font-semibold italic">
                   Cliquez pour voir le Top 10 des mots &rarr;
                 </div>
               )}

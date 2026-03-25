@@ -130,7 +130,7 @@ export default function Concentration({ data }) {
             <XAxis type="number" tick={{ fontSize: 11 }} />
             <YAxis type="category" dataKey="name" width={230} tick={{ fontSize: 11 }} />
             <Tooltip {...TooltipStyle} formatter={v => [v.toLocaleString('fr-FR'), 'thèses']} />
-            <Bar dataKey="nb" fill="#6366f1" radius={[0, 4, 4, 0]} />
+            <Bar dataKey="nb" fill="#016d76" radius={[0, 4, 4, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </Card>
@@ -147,7 +147,7 @@ export default function Concentration({ data }) {
             <XAxis type="number" tick={{ fontSize: 11 }} />
             <YAxis type="category" dataKey="name" width={230} tick={{ fontSize: 11 }} />
             <Tooltip {...TooltipStyle} formatter={v => [v, 'thèses encadrées']} />
-            <Bar dataKey="nb" fill="#f97316" radius={[0, 4, 4, 0]} />
+            <Bar dataKey="nb" fill="#ec8927" radius={[0, 4, 4, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </Card>

@@ -33,8 +33,8 @@ export default function Sidebar({ filters, onChange, activePage, onNavigate }) {
               ${soon
                 ? 'text-slate-300 cursor-default'
                 : activePage === id
-                  ? 'bg-indigo-50 text-indigo-700 font-medium'
-                  : 'text-slate-600 hover:text-indigo-600 hover:bg-indigo-50'
+                  ? 'bg-canard-50 text-canard-700 font-medium'
+                  : 'text-slate-600 hover:text-canard-600 hover:bg-canard-50'
               }`}
           >
             {label}
