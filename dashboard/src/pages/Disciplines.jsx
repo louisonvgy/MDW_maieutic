@@ -421,7 +421,7 @@ export default function Disciplines({ data, filters, isDarkMode }) {
 
         {/* Drill-down Chart */}
         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 flex flex-col shadow-sm">
-          <p className="text-sm font-semibold text-slate-700 dark:text-slate-100 mb-4">Top 10 des mots clés les plus utilisé par CNU</p>
+          <p className="text-sm font-semibold text-slate-700 dark:text-slate-100 mb-4">Top 10 des mots clés les plus utilisés par CNU</p>
           <div className="flex-1 w-full relative">
             <KeywordDrillDown filters={filters} isDarkMode={isDarkMode} />
           </div>
