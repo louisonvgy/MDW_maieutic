@@ -145,11 +145,12 @@ export default function Disciplines({ data, filters, isDarkMode }) {
             height={dims.h}
             className="block"
           >
+            {/* Toutes les bulles (sans tooltip) */}
             {nodes.map(node => {
               const isHov = hovered === node.id
               const isSel = selected === node.id
               const color = getColor(node.cnu_dominant)
-              const label = node.keywords?.slice(0, 2).join(' / ') || node.label
+              const label = node.label
               const fontSize = Math.max(9, Math.min(13, node.r / 4.5))
 
               return (
@@ -161,7 +162,6 @@ export default function Disciplines({ data, filters, isDarkMode }) {
                   onMouseLeave={() => setHovered(null)}
                   onClick={() => { setSelected(prev => { const next = prev === node.id ? null : node.id; if (next !== prev) setShowTheses(false); return next }) }}
                 >
-                  {/* Cercle principal */}
                   <circle
                     r={node.r}
                     fill={color}
@@ -170,31 +170,41 @@ export default function Disciplines({ data, filters, isDarkMode }) {
                     strokeWidth={isSel ? 2.5 : isHov ? 1.5 : 0.5}
                     style={{ transition: 'fill-opacity 0.15s, stroke-width 0.15s' }}
                   />
-
-                  {/* Label (visible si bulle assez grande) */}
-                  {node.r > 28 && (
-                    <text
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      fontSize={fontSize}
-                      fontWeight={isSel ? 700 : 500}
-                      fill={isDarkMode ? (isSel || isHov ? '#f1f5f9' : '#cbd5e1') : (isSel || isHov ? '#1e293b' : '#334155')}
-                      style={{ pointerEvents: 'none', userSelect: 'none' }}
-                    >
-                      {/* Découper le label en 2 lignes si besoin */}
-                      {label.split(' / ').map((word, i, arr) => (
-                        <tspan
-                          key={i}
-                          x={0}
-                          dy={i === 0 ? -(arr.length - 1) * fontSize * 0.6 : fontSize * 1.2}
-                        >
-                          {word}
-                        </tspan>
-                      ))}
-                    </text>
-                  )}
-
-                  {/* Compteur */}
+                  {node.r > 28 && (() => {
+                    // Word-wrap : max ~(2*r * 0.85) px de large, ~charsPerLine caractères
+                    const maxW = node.r * 1.7
+                    const charsPerLine = Math.floor(maxW / (fontSize * 0.55))
+                    const words = label.split(' ')
+                    const lines = []
+                    let current = ''
+                    for (const w of words) {
+                      const candidate = current ? `${current} ${w}` : w
+                      if (candidate.length > charsPerLine && current) {
+                        lines.push(current)
+                        current = w
+                      } else {
+                        current = candidate
+                      }
+                    }
+                    if (current) lines.push(current)
+                    const lineH = fontSize * 1.25
+                    const totalH = lines.length * lineH
+                    return (
+                      <text
+                        textAnchor="middle"
+                        fontSize={fontSize}
+                        fontWeight={isSel ? 700 : 500}
+                        fill={isDarkMode ? (isSel || isHov ? '#f1f5f9' : '#cbd5e1') : (isSel || isHov ? '#1e293b' : '#334155')}
+                        style={{ pointerEvents: 'none', userSelect: 'none' }}
+                      >
+                        {lines.map((line, i) => (
+                          <tspan key={i} x={0} dy={i === 0 ? -totalH / 2 + fontSize * 0.85 : lineH}>
+                            {line}
+                          </tspan>
+                        ))}
+                      </text>
+                    )
+                  })()}
                   {node.r > 36 && (
                     <text
                       y={node.r - 10}
@@ -207,43 +217,53 @@ export default function Disciplines({ data, filters, isDarkMode }) {
                       {node.nb}
                     </text>
                   )}
-
-                  {/* Tooltip au survol */}
-                  {isHov && (
-                    <g transform={`translate(${node.r + 8}, ${-node.r / 2})`}>
-                      <rect
-                        x={0} y={0}
-                        width={200}
-                        height={16 + (node.keywords?.length ?? 0) * 14 + 18}
-                        rx={8}
-                        fill={isDarkMode ? '#1e293b' : '#ffffff'}
-                        fillOpacity={1}
-                        stroke={isDarkMode ? '#334155' : '#cbd5e1'}
-                        strokeWidth={1}
-                        filter="drop-shadow(0 4px 12px rgba(0,0,0,0.25))"
-                      />
-                      <text x={10} y={14} fontSize={11} fontWeight={700} fill={isDarkMode ? '#f1f5f9' : '#1e293b'}>
-                        {node.label}
-                      </text>
-                      {node.keywords?.slice(0, 6).map((kw, i) => (
-                        <text key={kw} x={10} y={14 + (i + 1) * 14} fontSize={10} fill={isDarkMode ? '#94a3b8' : '#64748b'}>
-                          • {kw}
-                        </text>
-                      ))}
-                      <text
-                        x={10}
-                        y={14 + (node.keywords?.slice(0, 6).length ?? 0) * 14 + 14}
-                        fontSize={10}
-                        fill={color}
-                        fontWeight={600}
-                      >
-                        {node.nb} thèses · {node.cnu_dominant ?? '—'}
-                      </text>
-                    </g>
-                  )}
                 </g>
               )
             })}
+
+            {/* Tooltip rendu en dernier = toujours au-dessus de toutes les bulles */}
+            {(() => {
+              const node = nodes.find(n => n.id === hovered)
+              if (!node) return null
+              const color = getColor(node.cnu_dominant)
+              const tooltipW = 200
+              const tooltipH = 16 + (node.keywords?.slice(0, 6).length ?? 0) * 14 + 18
+              // Évite de sortir du SVG à droite
+              const tx = node.x + node.r + 8 + tooltipW > dims.w ? node.x - node.r - 8 - tooltipW : node.x + node.r + 8
+              const ty = Math.max(8, Math.min(node.y - node.r / 2, dims.h - tooltipH - 8))
+              return (
+                <g transform={`translate(${tx},${ty})`} style={{ pointerEvents: 'none' }}>
+                  <rect
+                    x={0} y={0}
+                    width={tooltipW}
+                    height={tooltipH}
+                    rx={8}
+                    fill={isDarkMode ? '#1e293b' : '#ffffff'}
+                    fillOpacity={1}
+                    stroke={isDarkMode ? '#334155' : '#cbd5e1'}
+                    strokeWidth={1}
+                    filter="drop-shadow(0 4px 12px rgba(0,0,0,0.25))"
+                  />
+                  <text x={10} y={14} fontSize={11} fontWeight={700} fill={isDarkMode ? '#f1f5f9' : '#1e293b'}>
+                    {node.label}
+                  </text>
+                  {node.keywords?.slice(0, 6).map((kw, i) => (
+                    <text key={kw} x={10} y={14 + (i + 1) * 14} fontSize={10} fill={isDarkMode ? '#94a3b8' : '#64748b'}>
+                      • {kw}
+                    </text>
+                  ))}
+                  <text
+                    x={10}
+                    y={14 + (node.keywords?.slice(0, 6).length ?? 0) * 14 + 14}
+                    fontSize={10}
+                    fill={color}
+                    fontWeight={600}
+                  >
+                    {node.nb} thèses · {node.cnu_dominant ?? '—'}
+                  </text>
+                </g>
+              )
+            })()}
           </svg>
         </div>
 

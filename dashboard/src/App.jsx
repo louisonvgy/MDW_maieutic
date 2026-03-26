@@ -20,7 +20,7 @@ export default function App() {
   }, [isDarkMode])
 
   return (
-    <div className={`flex min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors ${isDarkMode ? 'dark' : ''}`}>
+    <div className={`flex h-screen overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors ${isDarkMode ? 'dark' : ''}`}>
       <Sidebar filters={filters} onChange={setFilters} activePage={page} onNavigate={setPage} isDarkMode={isDarkMode} toggleDarkMode={() => setIsDarkMode(!isDarkMode)} />
       <main className="flex-1 flex flex-col overflow-hidden">
         {page !== 'disciplines' && (

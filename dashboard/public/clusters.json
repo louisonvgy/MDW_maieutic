@@ -1,7 +1,7 @@
 [
   {
     "id": 37,
-    "label": "philosophie / pensée / foucault",
+    "label": "Philosophie critique & histoire des idées",
     "keywords": [
       "philosophie",
       "pensée",
@@ -32,7 +32,7 @@
   },
   {
     "id": 28,
-    "label": "afrique / sénégal / ivoire",
+    "label": "Éducation en Afrique subsaharienne",
     "keywords": [
       "afrique",
       "sénégal",
@@ -62,7 +62,7 @@
   },
   {
     "id": 1,
-    "label": "santé / soins / handicap",
+    "label": "Pratiques de soin & handicap",
     "keywords": [
       "santé",
       "soins",
@@ -93,7 +93,7 @@
   },
   {
     "id": 17,
-    "label": "cinéma / films / théâtre",
+    "label": "Cinéma & arts de la scène",
     "keywords": [
       "cinéma",
       "films",
@@ -124,7 +124,7 @@
   },
   {
     "id": 40,
-    "label": "siècle / siècles / architecture",
+    "label": "Architecture & patrimoine historique",
     "keywords": [
       "siècle",
       "siècles",
@@ -154,7 +154,7 @@
   },
   {
     "id": 5,
-    "label": "numérique / marque / ligne",
+    "label": "Marketing digital & consommateurs",
     "keywords": [
       "numérique",
       "marque",
@@ -184,7 +184,7 @@
   },
   {
     "id": 35,
-    "label": "élèves / enseignants / enseignement",
+    "label": "Pédagogie & pratiques scolaires",
     "keywords": [
       "élèves",
       "enseignants",
@@ -215,7 +215,7 @@
   },
   {
     "id": 24,
-    "label": "networks / wireless / communications",
+    "label": "Télécommunications & réseaux sans fil",
     "keywords": [
       "networks",
       "wireless",
@@ -242,7 +242,7 @@
   },
   {
     "id": 18,
-    "label": "physique / cancer / activité physique",
+    "label": "Activité physique & santé",
     "keywords": [
       "physique",
       "cancer",
@@ -272,7 +272,7 @@
   },
   {
     "id": 19,
-    "label": "essays / three essays / finance",
+    "label": "Finance corporative & marchés",
     "keywords": [
       "essays",
       "three essays",
@@ -302,7 +302,7 @@
   },
   {
     "id": 3,
-    "label": "musique / musicale / sonores",
+    "label": "Musicologie & arts sonores",
     "keywords": [
       "musique",
       "musicale",
@@ -333,7 +333,7 @@
   },
   {
     "id": 21,
-    "label": "organisations / entreprises / management",
+    "label": "Management, RSE & organisations",
     "keywords": [
       "organisations",
       "entreprises",
@@ -362,7 +362,7 @@
   },
   {
     "id": 15,
-    "label": "ville / urbaine / urbain",
+    "label": "Urbanisme & écologie urbaine",
     "keywords": [
       "ville",
       "urbaine",
@@ -393,7 +393,7 @@
   },
   {
     "id": 9,
-    "label": "femmes / genre / violence",
+    "label": "Études de genre & violences",
     "keywords": [
       "femmes",
       "genre",
@@ -423,7 +423,7 @@
   },
   {
     "id": 12,
-    "label": "eaux / océan / pollution",
+    "label": "Océanographie & environnement marin",
     "keywords": [
       "eaux",
       "océan",
@@ -454,7 +454,7 @@
   },
   {
     "id": 31,
-    "label": "politique / européenne / france",
+    "label": "Politique européenne & démocratie",
     "keywords": [
       "politique",
       "européenne",
@@ -483,7 +483,7 @@
   },
   {
     "id": 34,
-    "label": "langue / linguistique / langues",
+    "label": "Didactique des langues étrangères",
     "keywords": [
       "langue",
       "linguistique",
@@ -513,7 +513,7 @@
   },
   {
     "id": 16,
-    "label": "colombie / chili / brésil",
+    "label": "Sociétés & politiques latino-américaines",
     "keywords": [
       "colombie",
       "chili",
@@ -543,7 +543,7 @@
   },
   {
     "id": 39,
-    "label": "art / artistiques / musée",
+    "label": "Art contemporain & musées",
     "keywords": [
       "art",
       "artistiques",
@@ -573,7 +573,7 @@
   },
   {
     "id": 26,
-    "label": "learning / machine learning / machine",
+    "label": "Apprentissage automatique & deep learning",
     "keywords": [
       "learning",
       "machine learning",
@@ -601,7 +601,7 @@
   },
   {
     "id": 27,
-    "label": "al / arabe / liban",
+    "label": "Islam politique & Moyen-Orient",
     "keywords": [
       "al",
       "arabe",
@@ -631,7 +631,7 @@
   },
   {
     "id": 0,
-    "label": "chine / chinois / chinoise",
+    "label": "Études chinoises & sinologie",
     "keywords": [
       "chine",
       "chinois",
@@ -661,7 +661,7 @@
   },
   {
     "id": 41,
-    "label": "art / peinture / siècle",
+    "label": "Art classique & Renaissance",
     "keywords": [
       "art",
       "peinture",
@@ -688,7 +688,7 @@
   },
   {
     "id": 6,
-    "label": "atlas / detector / experiment",
+    "label": "Physique des particules (LHC)",
     "keywords": [
       "atlas",
       "detector",
@@ -711,7 +711,7 @@
   },
   {
     "id": 14,
-    "label": "climatique / changement climatique / changement",
+    "label": "Transition énergétique & climat",
     "keywords": [
       "climatique",
       "changement climatique",
@@ -741,7 +741,7 @@
   },
   {
     "id": 25,
-    "label": "learning / images / imaging",
+    "label": "IA & imagerie médicale",
     "keywords": [
       "learning",
       "images",
@@ -769,7 +769,7 @@
   },
   {
     "id": 22,
-    "label": "migrants / migration / asile",
+    "label": "Migrations, asile & réfugiés",
     "keywords": [
       "migrants",
       "migration",
@@ -800,7 +800,7 @@
   },
   {
     "id": 36,
-    "label": "enfance / protection enfance / jeunes",
+    "label": "Enfance, famille & protection sociale",
     "keywords": [
       "enfance",
       "protection enfance",
@@ -829,7 +829,7 @@
   },
   {
     "id": 38,
-    "label": "photographie / couleur / numérique",
+    "label": "Photographie & image numérique",
     "keywords": [
       "photographie",
       "couleur",
@@ -859,7 +859,7 @@
   },
   {
     "id": 29,
-    "label": "innovation / entreprises / pme",
+    "label": "Innovation & business model",
     "keywords": [
       "innovation",
       "entreprises",
@@ -884,7 +884,7 @@
   },
   {
     "id": 32,
-    "label": "justice / hannah / arendt",
+    "label": "Justice, droit & philosophie politique",
     "keywords": [
       "justice",
       "hannah",
@@ -911,7 +911,7 @@
   },
   {
     "id": 8,
-    "label": "experiment / detector / search",
+    "label": "Physique nucléaire & détecteurs",
     "keywords": [
       "experiment",
       "detector",
@@ -937,7 +937,7 @@
   },
   {
     "id": 7,
-    "label": "ray / cosmologie / gamma ray",
+    "label": "Astrophysique & cosmologie",
     "keywords": [
       "ray",
       "cosmologie",
@@ -963,7 +963,7 @@
   },
   {
     "id": 23,
-    "label": "particules / caractérisation / matériaux",
+    "label": "Science des matériaux & électronique",
     "keywords": [
       "particules",
       "caractérisation",
@@ -990,7 +990,7 @@
   },
   {
     "id": 11,
-    "label": "alimentaire / alimentaires / alimentation",
+    "label": "Alimentation durable & consommateurs",
     "keywords": [
       "alimentaire",
       "alimentaires",
@@ -1021,7 +1021,7 @@
   },
   {
     "id": 30,
-    "label": "entrepreneurial / entrepreneuriat / entrepreneurs",
+    "label": "Entrepreneuriat & écosystèmes",
     "keywords": [
       "entrepreneurial",
       "entrepreneuriat",
@@ -1046,7 +1046,7 @@
   },
   {
     "id": 33,
-    "label": "france / enseignants / universités",
+    "label": "Enseignement supérieur & universités",
     "keywords": [
       "france",
       "enseignants",
@@ -1074,7 +1074,7 @@
   },
   {
     "id": 10,
-    "label": "agricole / agriculture / agricoles",
+    "label": "Agriculture durable & agroécologie",
     "keywords": [
       "agricole",
       "agriculture",
@@ -1104,7 +1104,7 @@
   },
   {
     "id": 13,
-    "label": "supply / supply chain / chain",
+    "label": "Logistique & supply chain",
     "keywords": [
       "supply",
       "supply chain",
@@ -1133,7 +1133,7 @@
   },
   {
     "id": 2,
-    "label": "architecture / architectural / architecturale",
+    "label": "Architecture & design durable",
     "keywords": [
       "architecture",
       "architectural",
@@ -1162,7 +1162,7 @@
   },
   {
     "id": 20,
-    "label": "intelligence / intelligence artificielle / artificielle",
+    "label": "IA, éthique & décision",
     "keywords": [
       "intelligence",
       "intelligence artificielle",
@@ -1192,7 +1192,7 @@
   },
   {
     "id": 4,
-    "label": "médias / journalisme / news",
+    "label": "Journalisme & désinformation numérique",
     "keywords": [
       "médias",
       "journalisme",

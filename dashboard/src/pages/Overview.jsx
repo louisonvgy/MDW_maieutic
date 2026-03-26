@@ -4,17 +4,6 @@ import 'leaflet/dist/leaflet.css'
 import SparkLine from '../components/charts/SparkLine'
 import { allData } from '../hooks/useFilteredData'
 
-const CNU_LABELS = {
-  '04': 'Science politique',
-  '06': 'Sciences de gestion',
-  '17': 'Philosophie',
-  '18': 'Arts',
-  '19': 'Sociologie',
-  '20': 'Ethnologie',
-  '70': "Sciences de l'éducation",
-  '71': 'Info-com',
-  '72': 'Épistémologie',
-}
 
 function KpiCard({ label, value, sub, color = 'indigo' }) {
   const colors = {
@@ -66,10 +55,14 @@ export default function Overview({ data }) {
 
     // CNU distribution
     const byCnu = {}
-    visData.forEach(d => { byCnu[d.cnu] = (byCnu[d.cnu] || 0) + 1 })
+    const cnuNormMap = {}
+    visData.forEach(d => {
+      byCnu[d.cnu] = (byCnu[d.cnu] || 0) + 1
+      if (d.cnu && d.cnu_norm) cnuNormMap[d.cnu] = d.cnu_norm
+    })
     const cnuData = Object.entries(byCnu)
       .sort((a, b) => b[1] - a[1])
-      .map(([cnu, nb]) => ({ cnu, label: CNU_LABELS[cnu] || cnu, nb, pct: (nb / nbTheses * 100).toFixed(1) }))
+      .map(([cnu, nb]) => ({ cnu, label: cnuNormMap[cnu] || cnu, nb, pct: (nb / nbTheses * 100).toFixed(1) }))
 
     return { nbTheses, nbEtabs, nbDirecteurs, tauxCoEnc, sparkData, mapPoints, maxNb, cnuData }
   }, [visData])
@@ -145,7 +138,7 @@ export default function Overview({ data }) {
 
         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
           <p className="text-sm font-semibold text-slate-700 dark:text-slate-100 mb-4">Par section CNU</p>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 overflow-y-auto" style={{ maxHeight: 380 }}>
             {stats.cnuData.map(({ cnu, label, nb, pct }) => (
               <div key={cnu}>
                 <div className="flex justify-between text-xs mb-1">

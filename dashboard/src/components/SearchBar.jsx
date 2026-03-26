@@ -48,7 +48,7 @@ export default function SearchBar({ query, onQueryChange, data }) {
   const [showResults, setShowResults] = useState(false)
 
   return (
-    <div className="sticky top-0 z-20 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 px-8 py-3 flex flex-col gap-3">
+    <div className="z-20 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 px-8 pt-6 pb-4 flex flex-col gap-3">
       {/* Input */}
       <div className="relative">
         <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
