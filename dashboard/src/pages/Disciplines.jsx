@@ -34,6 +34,8 @@ export default function Disciplines({ data, filters, isDarkMode }) {
   const [selected, setSelected] = useState(null)
   const [showTheses, setShowTheses] = useState(false)
   const [dims, setDims] = useState({ w: 900, h: 680 })
+  const [pan, setPan] = useState({ x: 0, y: 0 })
+  const dragRef = useRef({ active: false, startX: 0, startY: 0, panX: 0, panY: 0, moved: false })
   const svgRef = useRef()
   const containerRef = useRef()
 
@@ -122,7 +124,7 @@ export default function Disciplines({ data, filters, isDarkMode }) {
   )
 
   return (
-    <div className="p-8 flex flex-col gap-6">
+    <div className="p-4 md:p-8 flex flex-col gap-6">
 
       {/* Header */}
       <div>
@@ -132,19 +134,43 @@ export default function Disciplines({ data, filters, isDarkMode }) {
         </p>
       </div>
 
-      <div className="flex gap-6 items-start">
+      <div className="flex flex-col lg:flex-row gap-6 items-start">
 
         {/* Bubble chart */}
         <div
           ref={containerRef}
-          className="flex-1 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm"
+          className="flex-1 relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm"
         >
+          {(pan.x !== 0 || pan.y !== 0) && (
+            <button
+              onClick={() => setPan({ x: 0, y: 0 })}
+              className="absolute top-3 right-3 z-10 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 shadow-sm"
+            >
+              Recentrer
+            </button>
+          )}
           <svg
             ref={svgRef}
             width={dims.w}
             height={dims.h}
             className="block"
+            style={{ cursor: 'grab' }}
+            onMouseDown={e => {
+              dragRef.current = { active: true, startX: e.clientX, startY: e.clientY, panX: pan.x, panY: pan.y, moved: false }
+            }}
+            onMouseMove={e => {
+              if (!dragRef.current.active) return
+              const dx = e.clientX - dragRef.current.startX
+              const dy = e.clientY - dragRef.current.startY
+              if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+                dragRef.current.moved = true
+                setPan({ x: dragRef.current.panX + dx, y: dragRef.current.panY + dy })
+              }
+            }}
+            onMouseUp={() => { dragRef.current.active = false }}
+            onMouseLeave={() => { dragRef.current.active = false }}
           >
+            <g transform={`translate(${pan.x},${pan.y})`}>
             {/* Toutes les bulles (sans tooltip) */}
             {nodes.map(node => {
               const isHov = hovered === node.id
@@ -160,7 +186,7 @@ export default function Disciplines({ data, filters, isDarkMode }) {
                   style={{ cursor: 'pointer' }}
                   onMouseEnter={() => setHovered(node.id)}
                   onMouseLeave={() => setHovered(null)}
-                  onClick={() => { setSelected(prev => { const next = prev === node.id ? null : node.id; if (next !== prev) setShowTheses(false); return next }) }}
+                  onClick={() => { if (dragRef.current.moved) return; setSelected(prev => { const next = prev === node.id ? null : node.id; if (next !== prev) setShowTheses(false); return next }) }}
                 >
                   <circle
                     r={node.r}
@@ -264,6 +290,7 @@ export default function Disciplines({ data, filters, isDarkMode }) {
                 </g>
               )
             })()}
+            </g>
           </svg>
         </div>
 

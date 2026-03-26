@@ -9,12 +9,21 @@ import Disciplines from './pages/Disciplines'
 import Tutorial from './components/layout/Tutorial'
 import { useFilteredData } from './hooks/useFilteredData'
 
+const NAV_LABELS = {
+  overview:      'Vue d\'ensemble',
+  temporel:      'Évolution temporelle',
+  concentration: 'Concentration',
+  reseau:        'Réseau',
+  disciplines:   'Regroupement par mot clé',
+}
+
 export default function App() {
   const [page, setPage] = useState('overview')
   const [filters, setFilters] = useState({ annee: null, cnu: null, etablissement: null, query: '' })
   const data = useFilteredData(filters)
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [isTutorialActive, setIsTutorialActive] = useState(false)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   useEffect(() => {
     if (isDarkMode) document.documentElement.classList.add('dark')
@@ -23,9 +32,35 @@ export default function App() {
 
   return (
     <div className={`flex h-screen overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors ${isDarkMode ? 'dark' : ''}`}>
-      <Sidebar filters={filters} onChange={setFilters} activePage={page} onNavigate={setPage} isDarkMode={isDarkMode} toggleDarkMode={() => setIsDarkMode(!isDarkMode)} isTutorialActive={isTutorialActive} />
+      <Sidebar
+        filters={filters}
+        onChange={setFilters}
+        activePage={page}
+        onNavigate={setPage}
+        isDarkMode={isDarkMode}
+        toggleDarkMode={() => setIsDarkMode(!isDarkMode)}
+        isTutorialActive={isTutorialActive}
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
       <Tutorial onNavigate={setPage} currentPage={page} onActiveChange={setIsTutorialActive} />
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-hidden min-w-0">
+        {/* Topbar mobile */}
+        <div className="md:hidden flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shrink-0">
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            aria-label="Ouvrir le menu"
+          >
+            <svg className="w-5 h-5 text-slate-600 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <span className="font-semibold text-slate-800 dark:text-slate-100 text-sm truncate">
+            {NAV_LABELS[page]}
+          </span>
+        </div>
+
         {page !== 'disciplines' && (
           <SearchBar
             query={filters.query}

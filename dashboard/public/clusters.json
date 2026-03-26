@@ -1,7 +1,7 @@
 [
   {
     "id": 37,
-    "label": "Philosophie critique & histoire des idées",
+    "label": "Histoire de la philosophie occidentale",
     "keywords": [
       "philosophie",
       "pensée",
@@ -32,7 +32,7 @@
   },
   {
     "id": 28,
-    "label": "Éducation en Afrique subsaharienne",
+    "label": "Sociologie et anthropologie de l'Afrique contemporaine",
     "keywords": [
       "afrique",
       "sénégal",
@@ -62,7 +62,7 @@
   },
   {
     "id": 1,
-    "label": "Pratiques de soin & handicap",
+    "label": "Santé, vulnérabilité et action publique",
     "keywords": [
       "santé",
       "soins",
@@ -93,7 +93,7 @@
   },
   {
     "id": 17,
-    "label": "Cinéma & arts de la scène",
+    "label": "Arts et représentation visuels contemporains",
     "keywords": [
       "cinéma",
       "films",
@@ -124,7 +124,7 @@
   },
   {
     "id": 40,
-    "label": "Architecture & patrimoine historique",
+    "label": "Histoire matérielle et culturelle",
     "keywords": [
       "siècle",
       "siècles",
@@ -154,7 +154,7 @@
   },
   {
     "id": 5,
-    "label": "Marketing digital & consommateurs",
+    "label": "Numérique, société et pratiques contemporaines",
     "keywords": [
       "numérique",
       "marque",
@@ -184,7 +184,7 @@
   },
   {
     "id": 35,
-    "label": "Pédagogie & pratiques scolaires",
+    "label": "Pratiques et politiques d'enseignement scolaire",
     "keywords": [
       "élèves",
       "enseignants",
@@ -215,7 +215,7 @@
   },
   {
     "id": 24,
-    "label": "Télécommunications & réseaux sans fil",
+    "label": "Télécommunications et réseaux sans fil",
     "keywords": [
       "networks",
       "wireless",
@@ -242,7 +242,7 @@
   },
   {
     "id": 18,
-    "label": "Activité physique & santé",
+    "label": "Activité physique, sport et santé",
     "keywords": [
       "physique",
       "cancer",
@@ -272,7 +272,7 @@
   },
   {
     "id": 19,
-    "label": "Finance corporative & marchés",
+    "label": "Finance, marchés et gouvernance d'entreprise",
     "keywords": [
       "essays",
       "three essays",
@@ -302,7 +302,7 @@
   },
   {
     "id": 3,
-    "label": "Musicologie & arts sonores",
+    "label": "Musique histoire société culture interprétation",
     "keywords": [
       "musique",
       "musicale",
@@ -333,7 +333,7 @@
   },
   {
     "id": 21,
-    "label": "Management, RSE & organisations",
+    "label": "Travail, organisations et transformations sociales",
     "keywords": [
       "organisations",
       "entreprises",
@@ -362,7 +362,7 @@
   },
   {
     "id": 15,
-    "label": "Urbanisme & écologie urbaine",
+    "label": "Urbanisme, habitat et gouvernance territoriale",
     "keywords": [
       "ville",
       "urbaine",
@@ -393,7 +393,7 @@
   },
   {
     "id": 9,
-    "label": "Études de genre & violences",
+    "label": "Genre, sexualité et rapports sociaux",
     "keywords": [
       "femmes",
       "genre",
@@ -423,7 +423,7 @@
   },
   {
     "id": 12,
-    "label": "Océanographie & environnement marin",
+    "label": "Environnement marin et dynamiques océaniques côtières",
     "keywords": [
       "eaux",
       "océan",
@@ -454,7 +454,7 @@
   },
   {
     "id": 31,
-    "label": "Politique européenne & démocratie",
+    "label": "Politique, gouvernance et démocratie contemporaine",
     "keywords": [
       "politique",
       "européenne",
@@ -483,7 +483,7 @@
   },
   {
     "id": 34,
-    "label": "Didactique des langues étrangères",
+    "label": "Didactique des langues et linguistique appliquée",
     "keywords": [
       "langue",
       "linguistique",
@@ -513,7 +513,7 @@
   },
   {
     "id": 16,
-    "label": "Sociétés & politiques latino-américaines",
+    "label": "Sociologie et anthropologie de l'Amérique latine",
     "keywords": [
       "colombie",
       "chili",
@@ -543,7 +543,7 @@
   },
   {
     "id": 39,
-    "label": "Art contemporain & musées",
+    "label": "Art contemporain et pratiques curatoriales",
     "keywords": [
       "art",
       "artistiques",
@@ -573,7 +573,7 @@
   },
   {
     "id": 26,
-    "label": "Apprentissage automatique & deep learning",
+    "label": "Apprentissage automatique et intelligence artificielle",
     "keywords": [
       "learning",
       "machine learning",
@@ -601,7 +601,7 @@
   },
   {
     "id": 27,
-    "label": "Islam politique & Moyen-Orient",
+    "label": "Études sociales et culturelles du Moyen-Orient",
     "keywords": [
       "al",
       "arabe",
@@ -631,7 +631,7 @@
   },
   {
     "id": 0,
-    "label": "Études chinoises & sinologie",
+    "label": "Études chinoises et asiatiques contemporaines",
     "keywords": [
       "chine",
       "chinois",
@@ -661,7 +661,7 @@
   },
   {
     "id": 41,
-    "label": "Art classique & Renaissance",
+    "label": "Histoire de l'art et pratiques artistiques",
     "keywords": [
       "art",
       "peinture",
@@ -688,7 +688,7 @@
   },
   {
     "id": 6,
-    "label": "Physique des particules (LHC)",
+    "label": "Physique des particules au LHC",
     "keywords": [
       "atlas",
       "detector",
@@ -711,7 +711,7 @@
   },
   {
     "id": 14,
-    "label": "Transition énergétique & climat",
+    "label": "Transition écologique et durabilité",
     "keywords": [
       "climatique",
       "changement climatique",
@@ -741,7 +741,7 @@
   },
   {
     "id": 25,
-    "label": "IA & imagerie médicale",
+    "label": "Apprentissage profond pour l'imagerie médicale",
     "keywords": [
       "learning",
       "images",
@@ -769,7 +769,7 @@
   },
   {
     "id": 22,
-    "label": "Migrations, asile & réfugiés",
+    "label": "Migration, intégration et trajectoires sociales",
     "keywords": [
       "migrants",
       "migration",
@@ -800,7 +800,7 @@
   },
   {
     "id": 36,
-    "label": "Enfance, famille & protection sociale",
+    "label": "Enfance, famille et protection sociale",
     "keywords": [
       "enfance",
       "protection enfance",
@@ -829,7 +829,7 @@
   },
   {
     "id": 38,
-    "label": "Photographie & image numérique",
+    "label": "Théories visuelles et esthétique de l'image",
     "keywords": [
       "photographie",
       "couleur",
@@ -859,7 +859,7 @@
   },
   {
     "id": 29,
-    "label": "Innovation & business model",
+    "label": "Innovation et stratégie organisationnelle",
     "keywords": [
       "innovation",
       "entreprises",
@@ -884,7 +884,7 @@
   },
   {
     "id": 32,
-    "label": "Justice, droit & philosophie politique",
+    "label": "Droit, justice et libertés politiques",
     "keywords": [
       "justice",
       "hannah",
@@ -911,7 +911,7 @@
   },
   {
     "id": 8,
-    "label": "Physique nucléaire & détecteurs",
+    "label": "Physique des neutrinos et détection nucléaire",
     "keywords": [
       "experiment",
       "detector",
@@ -937,7 +937,7 @@
   },
   {
     "id": 7,
-    "label": "Astrophysique & cosmologie",
+    "label": "Astrophysique et cosmologie observationnelle multi-messagers",
     "keywords": [
       "ray",
       "cosmologie",
@@ -963,7 +963,7 @@
   },
   {
     "id": 23,
-    "label": "Science des matériaux & électronique",
+    "label": "Matériaux et composants microondes avancés",
     "keywords": [
       "particules",
       "caractérisation",
@@ -990,7 +990,7 @@
   },
   {
     "id": 11,
-    "label": "Alimentation durable & consommateurs",
+    "label": "Sociologie et consommation alimentaires durables",
     "keywords": [
       "alimentaire",
       "alimentaires",
@@ -1021,7 +1021,7 @@
   },
   {
     "id": 30,
-    "label": "Entrepreneuriat & écosystèmes",
+    "label": "Entrepreneuriat, écosystèmes et développement",
     "keywords": [
       "entrepreneurial",
       "entrepreneuriat",
@@ -1046,7 +1046,7 @@
   },
   {
     "id": 33,
-    "label": "Enseignement supérieur & universités",
+    "label": "Politiques, pratiques et transformations de l'éducation",
     "keywords": [
       "france",
       "enseignants",
@@ -1074,7 +1074,7 @@
   },
   {
     "id": 10,
-    "label": "Agriculture durable & agroécologie",
+    "label": "Transitions agroécologiques et durabilité agricole",
     "keywords": [
       "agricole",
       "agriculture",
@@ -1104,7 +1104,7 @@
   },
   {
     "id": 13,
-    "label": "Logistique & supply chain",
+    "label": "Chaîne d'approvisionnement et mobilité",
     "keywords": [
       "supply",
       "supply chain",
@@ -1133,7 +1133,7 @@
   },
   {
     "id": 2,
-    "label": "Architecture & design durable",
+    "label": "Architecture, design et matérialité",
     "keywords": [
       "architecture",
       "architectural",
@@ -1162,7 +1162,7 @@
   },
   {
     "id": 20,
-    "label": "IA, éthique & décision",
+    "label": "Intelligence artificielle et société",
     "keywords": [
       "intelligence",
       "intelligence artificielle",
@@ -1192,7 +1192,7 @@
   },
   {
     "id": 4,
-    "label": "Journalisme & désinformation numérique",
+    "label": "Médias, journalisme et plateformes numériques",
     "keywords": [
       "médias",
       "journalisme",

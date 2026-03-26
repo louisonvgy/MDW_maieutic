@@ -142,7 +142,7 @@ export default function Temporel({ data = [] }) {
   }
 
   return (
-    <div className="flex flex-col gap-8 p-8">
+    <div className="flex flex-col gap-6 md:gap-8 p-4 md:p-8">
       <div className="flex items-end justify-between">
         <div>
           <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Évolution temporelle</h2>
