@@ -109,7 +109,7 @@ export default function Concentration({ data }) {
   const dirData  = stats.dirEntries.slice(0, topDir).map(([name, nb]) => ({ name, nb }))
 
   return (
-    <div className="p-8 flex flex-col gap-8">
+    <div className="p-4 md:p-8 flex flex-col gap-6 md:gap-8">
 
       <div>
         <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Concentration</h2>
@@ -124,15 +124,19 @@ export default function Concentration({ data }) {
           <h3 className="text-base font-semibold text-slate-700 dark:text-slate-100">Thèses par établissement</h3>
           <TopSelector value={topEtab} onChange={setTopEtab} />
         </div>
-        <ResponsiveContainer width="100%" height={Math.max(300, topEtab * 28)}>
-          <BarChart data={etabData} layout="vertical" margin={{ left: 240, right: 50, top: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-            <XAxis type="number" tick={{ fontSize: 11 }} />
-            <YAxis type="category" dataKey="name" width={230} tick={{ fontSize: 11 }} />
-            <Tooltip {...TooltipStyle} formatter={v => [v.toLocaleString('fr-FR'), 'thèses']} />
-            <Bar dataKey="nb" fill="#016d76" radius={[0, 4, 4, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
+        <div className="overflow-x-auto">
+          <div style={{ minWidth: 560 }}>
+            <ResponsiveContainer width="100%" height={Math.max(300, topEtab * 28)}>
+              <BarChart data={etabData} layout="vertical" margin={{ left: 240, right: 50, top: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                <XAxis type="number" tick={{ fontSize: 11 }} />
+                <YAxis type="category" dataKey="name" width={230} tick={{ fontSize: 11 }} />
+                <Tooltip {...TooltipStyle} formatter={v => [v.toLocaleString('fr-FR'), 'thèses']} />
+                <Bar dataKey="nb" fill="#016d76" radius={[0, 4, 4, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </Card>
 
       {/* Directeurs */}
@@ -141,15 +145,19 @@ export default function Concentration({ data }) {
           <h3 className="text-base font-semibold text-slate-700 dark:text-slate-100">Thèses par directeur</h3>
           <TopSelector value={topDir} onChange={setTopDir} />
         </div>
-        <ResponsiveContainer width="100%" height={Math.max(300, topDir * 28)}>
-          <BarChart data={dirData} layout="vertical" margin={{ left: 240, right: 50, top: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-            <XAxis type="number" tick={{ fontSize: 11 }} />
-            <YAxis type="category" dataKey="name" width={230} tick={{ fontSize: 11 }} />
-            <Tooltip {...TooltipStyle} formatter={v => [v, 'thèses encadrées']} />
-            <Bar dataKey="nb" fill="#ec8927" radius={[0, 4, 4, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
+        <div className="overflow-x-auto">
+          <div style={{ minWidth: 560 }}>
+            <ResponsiveContainer width="100%" height={Math.max(300, topDir * 28)}>
+              <BarChart data={dirData} layout="vertical" margin={{ left: 240, right: 50, top: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                <XAxis type="number" tick={{ fontSize: 11 }} />
+                <YAxis type="category" dataKey="name" width={230} tick={{ fontSize: 11 }} />
+                <Tooltip {...TooltipStyle} formatter={v => [v, 'thèses encadrées']} />
+                <Bar dataKey="nb" fill="#ec8927" radius={[0, 4, 4, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </Card>
 
     </div>

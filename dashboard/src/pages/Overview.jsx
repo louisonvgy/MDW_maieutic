@@ -68,7 +68,7 @@ export default function Overview({ data }) {
   }, [visData])
 
   return (
-    <div className="p-8 flex flex-col gap-8">
+    <div className="p-4 md:p-8 flex flex-col gap-6 md:gap-8">
 
       {/* Header */}
       <div>

@@ -70,7 +70,7 @@ export default function Reseau({ data, filters, isDarkMode }) {
   if (!stats) return <p className="p-8 text-slate-400">Aucune donnée</p>
 
   return (
-    <div className="p-8 flex flex-col gap-8" ref={containerRef}>
+    <div className="p-4 md:p-8 flex flex-col gap-6 md:gap-8" ref={containerRef}>
 
       {/* Header */}
       <div>
