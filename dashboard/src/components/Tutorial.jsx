@@ -1,21 +1,12 @@
 import { useState, useEffect, useMemo } from 'react'
-import { useJoyride, STATUS } from 'react-joyride'
+import { Joyride, STATUS, EVENTS, ACTIONS } from 'react-joyride'
 
 /* ───────────────────── Étapes du tutoriel ───────────────────── */
 
-// Propriétés communes à TOUTES les étapes
-const COMMON = {
-  disableBeacon: true,
-  // Empêcher le clic sur l'overlay d'avancer ou fermer le tutoriel
-  overlayClickAction: false,
-  // Bloquer l'interaction avec l'élément ciblé pendant le spotlight
-  blockTargetInteraction: true,
-  // Boutons affichés dans le tooltip : skip + back + primary (pas de close/X)
-  buttons: ['skip', 'back', 'primary'],
-}
+const COMMON = { disableBeacon: true }
 
 const buildSteps = () => [
-  // ── 0. Bienvenue (centré) ──
+  // ── 0. Bienvenue ──
   {
     ...COMMON,
     target: 'body',
@@ -230,7 +221,7 @@ const buildSteps = () => [
         <p className="text-lg font-bold mb-2">🔬 Regroupement par mot clé</p>
         <p className="text-sm text-slate-600">
           Les thèses sont regroupées par similarité sémantique grâce à un algorithme de clustering.
-          <strong> Cliquez sur une bulle</strong> pour voir ses mots-clés TF-IDF et la liste des thèses associées.
+          <strong> Cliquez sur une bulle</strong> pour voir ses mots-clés et la liste des thèses associées.
           Plus bas : les <strong>tendances de mots-clés</strong> et le <strong>top 10 par CNU</strong>.
         </p>
       </div>
@@ -272,7 +263,6 @@ const JOYRIDE_STYLES = {
     borderRadius: 16,
     padding: '20px 24px',
     boxShadow: '0 25px 80px rgba(0,0,0,0.25)',
-    zIndex: 100001,
   },
   tooltipContent: {
     padding: 0,
@@ -296,7 +286,6 @@ const JOYRIDE_STYLES = {
     fontSize: 13,
     fontWeight: 600,
     padding: '8px 20px',
-    backgroundColor: '#e2e8f0',
     color: '#475569',
   },
 }
@@ -314,78 +303,79 @@ const LOCALE = {
 
 const STORAGE_KEY = 'mdw_tutorial_completed'
 
-export default function Tutorial({ onNavigate, currentPage, onActiveChange, onCloseSidebar }) {
-  const [shouldRun, setShouldRun] = useState(false)
-
+export default function Tutorial({ onNavigate, currentPage, onActiveChange }) {
+  const [run, setRun] = useState(false)
+  const [stepIndex, setStepIndex] = useState(0)
   const steps = useMemo(() => buildSteps(), [])
 
-  const { Tour, controls, state } = useJoyride({
-    steps,
-    run: shouldRun,
-    continuous: true,
-    scrollToFirstStep: true,
-    scrollOffset: 120,
-    spotlightPadding: 8,
-    styles: JOYRIDE_STYLES,
-    locale: LOCALE,
-    debug: false,
-  })
-
-  // Notifier le parent quand le tutoriel s'active/désactive
   useEffect(() => {
-    onActiveChange?.(shouldRun)
-  }, [shouldRun, onActiveChange])
+    onActiveChange?.(run)
+  }, [run, onActiveChange])
 
   // Auto-lancer au premier chargement si pas encore vu
   useEffect(() => {
     const done = localStorage.getItem(STORAGE_KEY)
     if (!done) {
-      const t = setTimeout(() => setShouldRun(true), 800)
+      const t = setTimeout(() => setRun(true), 800)
       return () => clearTimeout(t)
     }
   }, [])
 
-  // Écouter les événements de navigation entre pages
-  useEffect(() => {
-    if (!state || !shouldRun) return
-
-    const { index, status } = state
+  const handleCallback = (data) => {
+    const { status, index, type, action } = data
 
     // Tutoriel terminé ou skippé
-    if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
-      setShouldRun(false)
+    if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
+      setRun(false)
+      setStepIndex(0)
       localStorage.setItem(STORAGE_KEY, 'true')
       onNavigate('overview')
       return
     }
 
-    // Naviguer vers la bonne page si nécessaire
-    if (status === STATUS.RUNNING && index >= 0 && index < steps.length) {
-      const neededPage = steps[index]._page
+    // Avancer ou reculer entre étapes
+    if (type === EVENTS.STEP_AFTER || type === EVENTS.TARGET_NOT_FOUND) {
+      const nextIndex = action === ACTIONS.PREV ? index - 1 : index + 1
+      if (nextIndex < 0 || nextIndex >= steps.length) return
+
+      const neededPage = steps[nextIndex]?._page
       if (neededPage && neededPage !== currentPage) {
+        // Naviguer vers la bonne page, puis avancer après le rendu
         onNavigate(neededPage)
-      }
-      // Fermer la sidebar à partir de l'étape 4 (barre de recherche)
-      if (index >= 4) {
-        onCloseSidebar?.()
+        setTimeout(() => setStepIndex(nextIndex), 400)
+      } else {
+        setStepIndex(nextIndex)
       }
     }
-  }, [state?.index, state?.status, shouldRun, steps, currentPage, onNavigate])
+  }
 
-  // Expose méthode de relance globale
+  // Expose la méthode de relance globale (utilisée par le bouton "?")
   useEffect(() => {
     window.__restartTutorial = () => {
       localStorage.removeItem(STORAGE_KEY)
       onNavigate('overview')
       setTimeout(() => {
-        controls.go(0)
-        setShouldRun(true)
+        setStepIndex(0)
+        setRun(true)
       }, 400)
     }
-    return () => {
-      delete window.__restartTutorial
-    }
-  }, [onNavigate, controls])
+    return () => { delete window.__restartTutorial }
+  }, [onNavigate])
 
-  return Tour
+  return (
+    <Joyride
+      steps={steps}
+      run={run}
+      stepIndex={stepIndex}
+      continuous={true}
+      scrollToFirstStep={true}
+      scrollOffset={120}
+      spotlightPadding={8}
+      disableOverlayClose={true}
+      callback={handleCallback}
+      styles={JOYRIDE_STYLES}
+      locale={LOCALE}
+      showSkipButton={true}
+    />
+  )
 }

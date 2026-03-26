@@ -43,7 +43,7 @@ export default function App() {
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
       />
-      <Tutorial onNavigate={setPage} currentPage={page} onActiveChange={setIsTutorialActive} />
+      <Tutorial onNavigate={setPage} currentPage={page} onActiveChange={setIsTutorialActive} onCloseSidebar={() => setIsSidebarOpen(false)} />
       <main className="flex-1 flex flex-col overflow-hidden min-w-0">
         {/* Topbar mobile */}
         <div className="md:hidden flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shrink-0">

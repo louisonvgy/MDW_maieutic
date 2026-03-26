@@ -113,7 +113,7 @@ export default function Overview({ data }) {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
         <div id="tour-map" className="xl:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
           <p className="text-sm font-semibold text-slate-700 dark:text-slate-100 mb-3">Répartition géographique</p>
-          <div className="rounded-xl overflow-hidden" style={{ height: 380 }}>
+          <div className="rounded-xl overflow-hidden" style={{ height: 380, position: 'relative', zIndex: 0 }}>
             <MapContainer center={[46.5, 2.5]} zoom={5} style={{ height: '100%', width: '100%' }} scrollWheelZoom={false}>
               <TileLayer
                 url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"

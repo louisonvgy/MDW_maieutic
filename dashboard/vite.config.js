@@ -6,6 +6,6 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   optimizeDeps: {
     exclude: ['react-force-graph-2d'],
-    include: ['prop-types'],
+    include: ['prop-types', 'react-joyride'],
   },
 })

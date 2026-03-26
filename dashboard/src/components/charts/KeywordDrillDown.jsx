@@ -49,8 +49,9 @@ export default function KeywordDrillDown({ filters, isDarkMode }) {
       }
     })
 
-    // Prepare Root Level (List of CNUs)
+    // Prepare Root Level (List of CNUs with at least 10 theses)
     const rootCnus = Object.entries(cnuCounts)
+      .filter(([, count]) => count >= 10)
       .sort((a,b) => b[1] - a[1])
       .map(([name, count]) => ({
         id: name,

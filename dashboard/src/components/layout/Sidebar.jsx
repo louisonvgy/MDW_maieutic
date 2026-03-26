@@ -132,7 +132,7 @@ export default function Sidebar({ filters, onChange, activePage, onNavigate, isD
             )}
 
             {(filters.annee || filters.cnu || filters.etablissement) && (
-              <button onClick={() => onChange({ annee: null, cnu: null, etablissement: null })}
+              <button onClick={() => onChange({ ...filters, annee: null, cnu: null, etablissement: null })}
                 className="text-xs text-red-500 hover:text-red-700 text-left">
                 Réinitialiser les filtres
               </button>
