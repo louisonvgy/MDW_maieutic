@@ -79,7 +79,7 @@ export default function Overview({ data }) {
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+      <div id="tour-kpis" className="grid grid-cols-2 xl:grid-cols-4 gap-4">
         <KpiCard label="Thèses totales" value={stats.nbTheses.toLocaleString('fr-FR')} color="indigo" />
         <KpiCard label="Établissements" value={stats.nbEtabs} color="orange" />
         <KpiCard label="Directeurs distincts" value={stats.nbDirecteurs.toLocaleString('fr-FR')} sub="chercheurs encadrants" color="indigo" />
@@ -87,7 +87,7 @@ export default function Overview({ data }) {
       </div>
 
       {/* Évolution annuelle */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+      <div id="tour-sparkline" className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
         <p className="text-sm font-semibold text-slate-700 dark:text-slate-100 mb-3">Évolution annuelle</p>
         <div className="flex items-end gap-6">
           <div className="flex-1">
@@ -111,7 +111,7 @@ export default function Overview({ data }) {
 
       {/* Carte + CNU */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-        <div className="xl:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+        <div id="tour-map" className="xl:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
           <p className="text-sm font-semibold text-slate-700 dark:text-slate-100 mb-3">Répartition géographique</p>
           <div className="rounded-xl overflow-hidden" style={{ height: 380 }}>
             <MapContainer center={[46.5, 2.5]} zoom={5} style={{ height: '100%', width: '100%' }} scrollWheelZoom={false}>
@@ -136,7 +136,7 @@ export default function Overview({ data }) {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+        <div id="tour-cnu" className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
           <p className="text-sm font-semibold text-slate-700 dark:text-slate-100 mb-4">Par section CNU</p>
           <div className="flex flex-col gap-3 overflow-y-auto" style={{ maxHeight: 380 }}>
             {stats.cnuData.map(({ cnu, label, nb, pct }) => (

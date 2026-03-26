@@ -6,6 +6,7 @@ import Concentration from './pages/Concentration'
 import Temporel from './pages/Temporel'
 import Reseau from './pages/Reseau'
 import Disciplines from './pages/Disciplines'
+import Tutorial from './components/layout/Tutorial'
 import { useFilteredData } from './hooks/useFilteredData'
 
 export default function App() {
@@ -13,6 +14,7 @@ export default function App() {
   const [filters, setFilters] = useState({ annee: null, cnu: null, etablissement: null, query: '' })
   const data = useFilteredData(filters)
   const [isDarkMode, setIsDarkMode] = useState(false)
+  const [isTutorialActive, setIsTutorialActive] = useState(false)
 
   useEffect(() => {
     if (isDarkMode) document.documentElement.classList.add('dark')
@@ -21,7 +23,8 @@ export default function App() {
 
   return (
     <div className={`flex h-screen overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors ${isDarkMode ? 'dark' : ''}`}>
-      <Sidebar filters={filters} onChange={setFilters} activePage={page} onNavigate={setPage} isDarkMode={isDarkMode} toggleDarkMode={() => setIsDarkMode(!isDarkMode)} />
+      <Sidebar filters={filters} onChange={setFilters} activePage={page} onNavigate={setPage} isDarkMode={isDarkMode} toggleDarkMode={() => setIsDarkMode(!isDarkMode)} isTutorialActive={isTutorialActive} />
+      <Tutorial onNavigate={setPage} currentPage={page} onActiveChange={setIsTutorialActive} />
       <main className="flex-1 flex flex-col overflow-hidden">
         {page !== 'disciplines' && (
           <SearchBar

@@ -12,8 +12,11 @@ const NAV = [
   { id: 'disciplines',   label: 'Regroupement par mot clé' },
 ]
 
-export default function Sidebar({ filters, onChange, activePage, onNavigate, isDarkMode, toggleDarkMode }) {
-  const set = (key) => (e) => onChange({ ...filters, [key]: e.target.value || null })
+export default function Sidebar({ filters, onChange, activePage, onNavigate, isDarkMode, toggleDarkMode, isTutorialActive }) {
+  const set = (key) => (e) => {
+    if (isTutorialActive) return // bloquer les filtres pendant le tutoriel
+    onChange({ ...filters, [key]: e.target.value || null })
+  }
 
   return (
     <aside className="w-64 shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 h-screen sticky top-0 flex flex-col transition-colors">
@@ -28,6 +31,7 @@ export default function Sidebar({ filters, onChange, activePage, onNavigate, isD
       <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 leading-tight">Cartographie des thèses</h1>
             <button
+              id="tour-darkmode"
               onClick={toggleDarkMode}
               className="p-1.5 rounded-full cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
               title={isDarkMode ? "Passer au mode clair" : "Passer au mode nuit"}
@@ -40,18 +44,20 @@ export default function Sidebar({ filters, onChange, activePage, onNavigate, isD
             </button>
       </div>
 
-      <nav className="flex flex-col gap-1">
+      <nav id="tour-nav" className="flex flex-col gap-1">
         {NAV.map(({ id, label, soon }) => (
           <button
             key={id}
-            disabled={soon}
-            onClick={() => !soon && onNavigate(id)}
+            disabled={soon || isTutorialActive}
+            onClick={() => !soon && !isTutorialActive && onNavigate(id)}
             className={`text-sm text-left rounded-lg px-3 py-2 transition-colors flex items-center justify-between
-              ${soon
-                ? 'text-slate-300 dark:text-slate-600 cursor-default'
-                : activePage === id
-                  ? 'bg-canard-50 text-canard-700 font-medium dark:bg-canard-900/30 dark:text-canard-400'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-canard-600 dark:hover:text-canard-400 hover:bg-canard-50 dark:hover:bg-slate-800'
+              ${isTutorialActive && activePage !== id
+                ? 'text-slate-300 dark:text-slate-600 cursor-not-allowed opacity-50'
+                : soon
+                  ? 'text-slate-300 dark:text-slate-600 cursor-default'
+                  : activePage === id
+                    ? 'bg-canard-50 text-canard-700 font-medium dark:bg-canard-900/30 dark:text-canard-400'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-canard-600 dark:hover:text-canard-400 hover:bg-canard-50 dark:hover:bg-slate-800'
               }`}
           >
             {label}
@@ -60,7 +66,7 @@ export default function Sidebar({ filters, onChange, activePage, onNavigate, isD
         ))}
       </nav>
 
-      <div className="border-t border-slate-100 dark:border-slate-800 pt-4 flex flex-col gap-4">
+      <div id="tour-filters" className="border-t border-slate-100 dark:border-slate-800 pt-4 flex flex-col gap-4">
         <p className="text-xs font-semibold uppercase tracking-widest text-slate-400">Filtres</p>
 
         <label className="flex flex-col gap-1">
@@ -101,6 +107,17 @@ export default function Sidebar({ filters, onChange, activePage, onNavigate, isD
           </button>
         )}
       </div>
+      </div>
+
+      {/* Bouton aide / tutoriel */}
+      <div className="px-6 pb-4 pt-2 border-t border-slate-100 dark:border-slate-800">
+        <button
+          onClick={() => window.__restartTutorial?.()}
+          className="flex items-center gap-2 w-full text-xs text-slate-400 hover:text-canard-600 dark:hover:text-canard-400 transition-colors py-1.5"
+        >
+          <span className="w-5 h-5 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-[10px] font-bold">?</span>
+          Tutoriel guidé
+        </button>
       </div>
     </aside>
   )
